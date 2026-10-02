@@ -21,6 +21,25 @@ from funcloom.modular_cli import (
 from funcloom.snippet_cli import add_snippet_parser_none, run_snippet_int
 
 
+QUICK_START_STR = """\
+FuncLoom - the Python functionizer. Original files are never changed.
+
+  funcloom check script.py
+      report long functions and structure problems
+  funcloom snippet code.py
+      draft a reusable function from a snippet or notebook cell
+  funcloom plan script.py --start-line 10 --end-line 30 --name load_data
+      test whether lines 10-30 can safely become a function
+  funcloom modularize script.py --output my_package
+      turn a script, notebook or folder into a package
+  funcloom refine script.py --output script_refined.py
+      split long functions and wrap long lines in a new copy
+
+Run "funcloom COMMAND --help" for options or "funcloom --help" for all
+commands.
+"""
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Build CLI options shared by the local commands.
 
@@ -143,6 +162,9 @@ def main(argv_list: list[str] | None = None) -> int:
     Warnings:
         Warnings do not fail by default; use --fail-on warning for a gate.
     """
+    if not (sys.argv[1:] if argv_list is None else argv_list):
+        sys.stdout.write(QUICK_START_STR)
+        return 0
     arguments = build_parser().parse_args(argv_list)
     if arguments.command == "doctor":
         runtime_dict = describe_runtime_dict()

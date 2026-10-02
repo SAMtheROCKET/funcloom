@@ -59,8 +59,8 @@
       "properties": {
         "funcloom.pythonPath": {
           "type": "string",
-          "default": "python",
-          "description": "Python executable containing funcloom 0.10.3a0; relative paths resolve from the workspace root."
+          "default": "",
+          "description": "Python executable to use. Leave empty to use the interpreter selected in the Python extension (or python on PATH); relative paths resolve from the workspace root."
         }
       }
     }

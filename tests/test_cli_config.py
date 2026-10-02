@@ -26,6 +26,14 @@ class CliAndConfigTests(unittest.TestCase):
             exit_int = main(arguments)
         return exit_int, output_stream.getvalue(), error_stream.getvalue()
 
+    def test_no_arguments_show_the_quick_start(self) -> None:
+        status, output, error = self.run_command([])
+        self.assertEqual((status, error), (0, ""))
+        for command_str in ("funcloom check", "funcloom snippet",
+                            "funcloom plan", "funcloom modularize",
+                            "funcloom refine"):
+            self.assertIn(command_str, output)
+
     def test_doctor_reports_real_runtime(self) -> None:
         status, output, _ = self.run_command(["doctor", "--format", "json"])
         result_dict = json.loads(output)

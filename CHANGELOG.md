@@ -1,5 +1,10 @@
 # Unreleased
 
+- `funcloom` without arguments shows a short quick start.
+- VS Code: the extension uses the interpreter selected in the Python
+  extension when `funcloom.pythonPath` is empty (the new default), and
+  offers one-click Install/Update when FuncLoom is missing or outdated.
+- pre-commit hook `funcloom-check`; README quick start.
 - Package metadata and README describe FuncLoom as the Python
   functionizer, with keywords and family links to RefacTrail.
 

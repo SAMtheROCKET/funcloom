@@ -11,6 +11,53 @@ dependencies and does not need an LLM, account or network connection.
 Python 3.12 or newer is required. CI tests CPython 3.12-3.14 on Windows,
 Linux and macOS, and verifies the built packages on all three.
 
+## Quick start
+
+```bash
+pip install funcloom
+```
+
+That is all: FuncLoom has no dependencies. Python 3.12 or newer is
+required. Until the first PyPI release, install from GitHub instead:
+`pip install git+https://github.com/SAMtheROCKET/funcloom.git`.
+
+Then, in any project:
+
+```bash
+funcloom                                     # the most useful commands
+funcloom check script.py                     # long functions, structure
+funcloom snippet code.py                     # draft a reusable function
+funcloom modularize notebook.ipynb --output my_package
+funcloom refine script.py --output script_refined.py
+```
+
+Your original files are never changed: results go to a new file or an
+empty folder, and anything that cannot be proven safe is refused with a
+reason and line number. If your system blocks the `funcloom` command, use
+`python -m funcloom` instead.
+
+**In VS Code**, install the FuncLoom extension and run *FuncLoom: ...* from
+the Command Palette. It uses the Python interpreter selected in VS Code and
+offers to install FuncLoom there with one click.
+
+**On every commit**, add the hook to `.pre-commit-config.yaml`:
+
+```yaml
+repos:
+  - repo: https://github.com/SAMtheROCKET/funcloom
+    rev: v0.10.3a0
+    hooks:
+      - id: funcloom-check
+```
+
+### From source (development)
+
+```bash
+python -m venv .venv
+.venv/bin/python -m pip install -e .      # Windows: .venv\Scripts\python.exe
+.venv/bin/python -m funcloom doctor
+```
+
 ## Capabilities
 
 | Command | Input | Output |
@@ -27,28 +74,6 @@ projects. Generated files require review and the target project's tests.
 Structural checks and regression results do **not** prove that arbitrary
 programs retain their behavior. Unknown types and meanings remain explicit;
 domain context is supplied by the user, not guessed from names.
-
-## Install locally
-
-From the source folder in PowerShell:
-
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e .
-.\.venv\Scripts\python.exe -m funcloom doctor
-```
-
-On Linux/macOS use `python3 -m venv .venv` and `.venv/bin/python` instead.
-After local release preparation, a fresh environment can install the wheel
-offline:
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install --no-index --no-deps dist\0.10.2a0\funcloom-0.10.2a0-py3-none-any.whl
-```
-
-Nothing has been uploaded to PyPI or TestPyPI. Repository links in package
-metadata target the intended `SAMtheROCKET/funcloom` repository. Public
-repository creation and publication remain deferred by the owner.
 
 ## Try the workflows
 

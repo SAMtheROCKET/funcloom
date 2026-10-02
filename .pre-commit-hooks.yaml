@@ -1,0 +1,9 @@
+# pre-commit hook: add this repository to a project's
+# .pre-commit-config.yaml; pre-commit installs FuncLoom automatically.
+- id: funcloom-check
+  name: FuncLoom check
+  description: Report long functions and structure problems in the project.
+  entry: funcloom check .
+  language: python
+  pass_filenames: false
+  types_or: [python, pyi]
