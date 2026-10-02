@@ -8,9 +8,8 @@ Part of a family of standalone Python tools: [FuncLoom](https://github.com/SAMth
 
 **0.10.3a0 is an unpublished experimental alpha.** It has no runtime
 dependencies and does not need an LLM, account or network connection.
-Python 3.12 or newer is required. Current local validation covers CPython
-3.12 on Windows and Linux; macOS and other interpreter versions remain
-unverified in this delivery.
+Python 3.12 or newer is required. CI tests CPython 3.12-3.14 on Windows,
+Linux and macOS, and verifies the built packages on all three.
 
 ## Capabilities
 
