@@ -1,0 +1,53 @@
+name: Publish
+# Publishes one tagged version to TestPyPI or PyPI with Trusted Publishing
+# (no stored password or token). Run it by hand from a version tag
+# ("Use workflow from" -> tag v...). It first runs the full release check,
+# then uploads exactly the files that check verified, and waits for the
+# environment's required reviewer to approve the upload.
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Package index
+        type: choice
+        options: [testpypi, pypi]
+        default: testpypi
+permissions:
+  contents: read
+concurrency:
+  group: publish
+  cancel-in-progress: false
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run only from a tag that matches the package version
+        shell: bash
+        run: |
+          version=$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+          if [ "$GITHUB_REF_TYPE" != tag ] || [ "$GITHUB_REF_NAME" != "v$version" ]; then
+            echo "::error::Run this workflow from tag v$version (ran from $GITHUB_REF_TYPE $GITHUB_REF_NAME)."
+            exit 1
+          fi
+  release-check:
+    needs: guard
+    uses: ./.github/workflows/release-check.yml
+  publish:
+    needs: release-check
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.target }}
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: funcloom-dist
+          path: dist
+      - run: ls -l dist && sha256sum dist/*
+      - if: inputs.target == 'testpypi'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+      - if: inputs.target == 'pypi'
+        uses: pypa/gh-action-pypi-publish@release/v1

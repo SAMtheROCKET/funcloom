@@ -4,6 +4,7 @@ name: Release check
 # is uploaded to any package index; the files are kept as run artifacts.
 on:
   workflow_dispatch:
+  workflow_call:
   push:
     tags: ['v*']
 permissions:
