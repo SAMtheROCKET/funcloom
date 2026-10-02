@@ -1,0 +1,4 @@
+[snippet]
+naming_mode = "mathematical"
+summary = "Evaluate the supplied product and combined expression."
+function_name = "evaluate_expression_tuple"

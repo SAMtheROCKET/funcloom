@@ -1,0 +1,17 @@
+# Optional user intent. This file is read as data and never executed.
+[snippet]
+project_context = "Invoice calculation; preserve the supplied arithmetic."
+summary = "Calculate tax and the total amount including tax."
+function_name = "calculate_invoice_totals_tuple"
+literal_policy = "parameters"
+
+# Declared proposals, not conversions or verified runtime types.
+[input_types]
+base_amount = "float"
+tax_rate = "float"
+
+[descriptions]
+base_amount = "Amount before tax."
+tax_rate = "Fractional tax rate; 0.1 means ten percent."
+tax_amount = "Tax amount calculated from the base amount and rate."
+total_amount = "Base amount plus calculated tax."

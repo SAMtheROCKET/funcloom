@@ -1,0 +1,12 @@
+# Supported M1 subset, not the full future refactoring schema.
+[profile]
+name = "domain_explicit_m1"
+line_length = 79
+function_target_lines = 40
+function_max_lines = 50
+orchestrator_max_lines = 100
+main_guard_max_lines = 100
+max_file_bytes = 2000000
+main_function_names = ["main"]
+doc_sections = ["Args", "Returns", "Warnings"]
+# Omitted excluded_dirs retains the default environment/build exclusions.

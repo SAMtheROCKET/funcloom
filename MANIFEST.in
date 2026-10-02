@@ -1,0 +1,21 @@
+include README.md LICENSE CHANGELOG.md LICENSE_NOTICE.md
+include .gitignore .editorconfig
+include docs/LOCAL_SETUP.md docs/RULES.md
+include docs/EXTRACTION_PLANNING.md docs/M2B_*.md
+include docs/SNIPPET_WORKFLOW.md docs/GENERIC_VARIABLES.md
+include docs/MODULARIZE.md docs/REFINE.md docs/RELEASE_PREPARATION.md
+recursive-include examples *.py *.ipynb
+recursive-include profiles *.toml
+recursive-include scripts *.py *.sh
+recursive-include tests *.py
+recursive-include .vscode *.json
+global-exclude *.py[cod]
+prune reports
+prune dist
+prune .venv
+exclude AGENTS.md
+exclude docs/PROJECT_CONTEXT.md docs/BUILD_VERIFICATION.md
+exclude docs/PRODUCT_PLAN.md docs/ROADMAP.md docs/ARCHIVE_REVIEW_2026-09-30.md
+
+recursive-include editor *.js *.json *.md LICENSE
+include .github/workflows/ci.yml

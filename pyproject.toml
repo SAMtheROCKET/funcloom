@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "funcloom"
+version = "0.10.3a0"
+description = "The Python functionizer: turn scripts, snippets and Jupyter notebooks into verified functions and modular packages"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{name = "Sambit Supriya Dash"}]
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["python", "functionizer", "refactoring", "modularization", "function-extraction", "jupyter", "notebook", "notebook-to-python", "code-quality", "clean-code", "static-analysis", "developer-tools"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Framework :: Jupyter",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/SAMtheROCKET/funcloom"
+Repository = "https://github.com/SAMtheROCKET/funcloom"
+Issues = "https://github.com/SAMtheROCKET/funcloom/issues"
+Documentation = "https://github.com/SAMtheROCKET/funcloom#readme"
+Changelog = "https://github.com/SAMtheROCKET/funcloom/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+build = ["build>=1.2,<2"]
+release = ["build>=1.2,<2", "setuptools>=77.0.3", "twine>=6,<7"]
+
+[project.scripts]
+funcloom = "funcloom.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+funcloom = ["py.typed"]

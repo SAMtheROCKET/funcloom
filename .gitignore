@@ -1,0 +1,26 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+reports/
+.env
+.env.*
+!.env.example
+/work/refactrail-expanded/
+/work/
+.refactrail_cache/
+.vscode/
+*.log
+/=*
+*.vsix
+# Internal development notes (same list as scripts/release_check.py)
+AGENTS.md
+PROJECT_CONTEXT.md
+BUILD_VERIFICATION.md
+PRODUCT_PLAN.md
+ROADMAP.md

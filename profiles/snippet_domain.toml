@@ -1,0 +1,18 @@
+# Illustrative meanings explicitly supplied by a user, not inferred by FuncLoom.
+[snippet]
+naming_mode = "domain"
+project_context = "A user-defined shipment calculation."
+summary = "Calculate shipment mass and an adjusted result."
+function_name = "calculate_shipment_mass_tuple"
+
+[names]
+b = "unit_mass"
+c = "item_count"
+a = "shipment_mass"
+total = "adjusted_mass"
+
+[descriptions]
+b = "Mass per item in kilograms, as declared by the user."
+c = "Number of items, as declared by the user."
+a = "Product of mass per item and item count."
+total = "Shipment mass plus shipment mass divided by item count."
