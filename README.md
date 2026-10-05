@@ -6,7 +6,7 @@ transformation is verified or refused with a reason and source location.
 
 Part of a family of standalone Python tools: [FuncLoom](https://github.com/SAMtheROCKET/funcloom) (functionizer), [RefacTrail](https://github.com/SAMtheROCKET/refactrail) (refactorizer) and RepoContour (architect, planned). Each installs and works on its own.
 
-**0.10.3a0 is an unpublished experimental alpha.** It has no runtime
+**0.10.3a0 is an experimental alpha, published on PyPI.** It has no runtime
 dependencies and does not need an LLM, account or network connection.
 Python 3.12 or newer is required. CI tests CPython 3.12-3.14 on Windows,
 Linux and macOS, and verifies the built packages on all three.
@@ -18,8 +18,7 @@ pip install funcloom
 ```
 
 That is all: FuncLoom has no dependencies. Python 3.12 or newer is
-required. Until the first PyPI release, install from GitHub instead:
-`pip install git+https://github.com/SAMtheROCKET/funcloom.git`.
+required.
 
 Then, in any project:
 
