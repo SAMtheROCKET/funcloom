@@ -5,13 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "funcloom"
 version = "0.10.3a0"
-description = "The Python functionizer: turn scripts, snippets and Jupyter notebooks into verified functions and modular packages"
+description = "The Python functionizer: auto-generate verified functions and modular packages from scripts, snippets and Jupyter notebooks"
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [{name = "Sambit Supriya Dash"}]
 license = "MIT"
 license-files = ["LICENSE"]
-keywords = ["python", "functionizer", "refactoring", "modularization", "function-extraction", "jupyter", "notebook", "notebook-to-python", "code-quality", "clean-code", "static-analysis", "developer-tools"]
+keywords = ["python", "functionizer", "function-generator", "auto-function-generator", "function-extraction", "refactoring", "modularization", "auto-structure", "code-structure", "jupyter", "notebook", "notebook-to-python", "notebook-to-module", "data-science", "code-quality", "clean-code", "static-analysis", "developer-tools"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",

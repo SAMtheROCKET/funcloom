@@ -4,7 +4,22 @@
 notebooks into reviewable functions and modular packages; every
 transformation is verified or refused with a reason and source location.
 
-Part of a family of standalone Python tools: [FuncLoom](https://github.com/SAMtheROCKET/funcloom) (functionizer), [RefacTrail](https://github.com/SAMtheROCKET/refactrail) (refactorizer) and [FlowBlueprint](https://github.com/SAMtheROCKET/flowblueprint) (architect, in development). Each installs and works on its own.
+Part of a family of standalone Python tools: [FuncLoom](https://github.com/SAMtheROCKET/funcloom) (functionizer), [RefacTrail](https://github.com/SAMtheROCKET/refactrail) (refactorizer) and [FlowBlueprint](https://github.com/SAMtheROCKET/flowblueprint) (architect: script or notebook to architecture diagram). Each installs and works on its own.
+
+**Use FuncLoom to:**
+
+- generate functions automatically from long scripts, pasted snippets and
+  notebook cells (an *auto function generator* that shows its evidence);
+- turn a Jupyter notebook into a clean Python package with a pipeline
+  class and `main.py` (*notebook to module*, *notebook to script*);
+- auto-structure and modularize messy prototype, data-science or
+  coursework code so it can be reused, tested and presented;
+- split functions that are too long and add certain type hints and
+  docstrings, with every change verified or refused with a reason.
+
+Built for developers, data scientists, data analysts and students; pair it
+with RefacTrail to check and refactor the result and FlowBlueprint to draw
+its architecture for managers and product owners.
 
 **0.10.3a0 is an experimental alpha, published on PyPI.** It has no runtime
 dependencies and does not need an LLM, account or network connection.
