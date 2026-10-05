@@ -4,7 +4,7 @@
 notebooks into reviewable functions and modular packages; every
 transformation is verified or refused with a reason and source location.
 
-Part of a family of standalone Python tools: [FuncLoom](https://github.com/SAMtheROCKET/funcloom) (functionizer), [RefacTrail](https://github.com/SAMtheROCKET/refactrail) (refactorizer) and RepoContour (architect, planned). Each installs and works on its own.
+Part of a family of standalone Python tools: [FuncLoom](https://github.com/SAMtheROCKET/funcloom) (functionizer), [RefacTrail](https://github.com/SAMtheROCKET/refactrail) (refactorizer) and [FlowBlueprint](https://github.com/SAMtheROCKET/flowblueprint) (architect, in development). Each installs and works on its own.
 
 **0.10.3a0 is an experimental alpha, published on PyPI.** It has no runtime
 dependencies and does not need an LLM, account or network connection.
@@ -158,7 +158,7 @@ uninstallation. It writes logs, checksums and `verification.json`, with no
 upload step. See [release preparation](docs/RELEASE_PREPARATION.md).
 
 Python APIs and report schemas may change during the alpha. FuncLoom,
-RefacTrail and RepoContour remain separately releasable projects.
+RefacTrail and FlowBlueprint remain separately releasable projects.
 
 ## License
 

@@ -150,7 +150,7 @@ The PDF's readable text specifies:
 - At most ten step blocks per diagram part as a presentation preference.
 - Diagram maintenance alongside source changes and editable PNG delivery.
 
-Carry these into an optional RepoContour rendering profile. Syntax analysis
+Carry these into an optional FlowBlueprint rendering profile. Syntax analysis
 must determine actual loops and branches; it must not draw an unconditional
 path merely to avoid an open connector. Unknown dynamic relationships need
 visible labels. Management views should summarize modules/data boundaries;
