@@ -45,9 +45,10 @@ This second example must be refused:
 ```
 
 It returns exit **1** and `PLAN003`: `discount_rate_float` is set on only
-one branch, so its value at the selection is `ambiguous`. This is an
-expected verification case. (Before 0.6.0a0 this example used `+=`, which
-is now supported.)
+one branch and has no earlier value, so at the selection it is
+`possibly_unbound`. This is an expected verification case. (Before
+0.6.0a0 this example used `+=`, and before M2b.7 it gave the name an
+earlier value, which made it `ambiguous`; both are now supported.)
 
 Save a new JSON report by appending:
 

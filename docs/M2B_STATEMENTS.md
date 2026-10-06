@@ -47,7 +47,8 @@ calls the function, for example `clean_rows(rows)`.
   f-strings, frame-dependent names).
 
 The example `examples/plan_refused.py` now shows a value set on only one
-branch (PLAN003, `ambiguous`), because its old `+=` case is supported.
+branch with no earlier value (PLAN003, `possibly_unbound`), because its
+old `+=` case and, since M2b.7, its `ambiguous` case are supported.
 
 ## Snippets
 

@@ -6,7 +6,8 @@ from funcloom.plan_bindings import (
     DYNAMIC_NAMESPACE_NAMES_TUPLE, list_scope_reads_list,
 )
 from funcloom.plan_models import (
-    BindingFact, ExtractionPlan, ModuleBindings, append_issue_none,
+    BindingFact, ExtractionPlan, ModuleBindings, NameResolution,
+    append_issue_none,
 )
 
 FREE_NAME_STATUSES_TUPLE = ("builtin_lexical", "module_implicit")
@@ -234,7 +235,7 @@ def record_prefix_annotations_dict(
     return annotations_dict
 
 
-def accepts_input_bool(resolution_info) -> bool:
+def accepts_input_bool(resolution_info: NameResolution) -> bool:
     """Decide whether a resolved read can be passed in as an input.
 
     Args:
@@ -361,18 +362,36 @@ def record_inputs_none(
         plan_report.inputs.append(make_binding_fact(
             name_node.id, name_node.lineno, bindings_info,
         ))
-        status_info = bindings_info.statuses.get(name_node.id)
-        if name_node.id in bindings_info.bound and status_info is not None \
-                and status_info.status == "ambiguous":
-            plan_report.assumptions.append(
-                f"'{name_node.id}' may be set by several statements before "
-                "the region; the draft receives whichever value the module "
-                "holds when the region starts."
-            )
+        note_ambiguous_input_none(name_node.id, bindings_info, plan_report)
         if name_node.id not in bindings_info.bound:
             append_issue_none(plan_report, "PLAN003", name_node.lineno,
                               explain_unresolved_read_str(name_node.id,
                                                           bindings_info))
+
+
+def note_ambiguous_input_none(
+    name_str: str, bindings_info: ModuleBindings, plan_report: ExtractionPlan,
+) -> None:
+    """Record the assumption behind an accepted ambiguous input.
+
+    Args:
+        name_str (str): Input name.
+        bindings_info (ModuleBindings): Resolution evidence by name.
+        plan_report (ExtractionPlan): Assumption destination.
+    Returns:
+        None: Appends one assumption for an accepted ambiguous input.
+    Warnings:
+        The value is whichever one module code left before the region.
+    """
+    status_info = bindings_info.statuses.get(name_str)
+    if name_str in bindings_info.bound and status_info is not None and (
+        status_info.status == "ambiguous"
+    ):
+        plan_report.assumptions.append(
+            f"'{name_str}' may be set by several statements before the "
+            "region; the draft receives whichever value the module holds "
+            "when the region starts."
+        )
 
 
 def is_free_name_bool(name_str: str, bindings_info: ModuleBindings) -> bool:
@@ -411,5 +430,9 @@ def explain_unresolved_read_str(
     if resolution_info is None:
         return (f"Read of '{name_str}' has no resolved direct binding "
                 "before the region.")
-    return (f"Read of '{name_str}' is {resolution_info.status}, not "
-            f"direct: {resolution_info.detail}")
+    if resolution_info.status == "ambiguous":
+        return (f"Read of '{name_str}' is ambiguous because a function's "
+                "global declaration or a namespace call may change it: "
+                f"{resolution_info.detail}")
+    return (f"Read of '{name_str}' is {resolution_info.status}, so it "
+            f"cannot become an input: {resolution_info.detail}")
