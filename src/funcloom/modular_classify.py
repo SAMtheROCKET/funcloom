@@ -284,16 +284,34 @@ def refuse_unsupported_none(
                 "'global'/'nonlocal' for "
                 f"{', '.join(sorted(names_info.global_writes))} would "
                 "rebind a different namespace inside a step."))
-        if isinstance(top_info.node, ast.ImportFrom) and (
-            any(alias_node.name == "*" for alias_node in top_info.node.names)
-        ):
-            add_diagnostic_none(report_info, "MOD004", line_int,
+        wildcard_line_int = find_wildcard_line_int(top_info.node)
+        if wildcard_line_int is not None:
+            add_diagnostic_none(report_info, "MOD004", wildcard_line_int,
                                 "Wildcard import bindings cannot be shared "
                                 "without resolving their exports; use "
                                 "explicit imports before modularizing.")
         refuse_specials_none(top_info, report_info)
         if executable_bool:
             refuse_module_annotations_none(top_info, report_info)
+
+
+def find_wildcard_line_int(statement_node: ast.stmt) -> int | None:
+    """Find a wildcard import in a top-level statement.
+
+    Args:
+        statement_node (ast.stmt): The statement, including nested
+            blocks such as `try: from fast import *`.
+    Returns:
+        int | None: The line of the first `from x import *`, or None.
+    Warnings:
+        Code in such a block would move into a step function, where a
+        wildcard import is not allowed.
+    """
+    for node in ast.walk(statement_node):
+        if isinstance(node, ast.ImportFrom) and any(
+                alias_node.name == "*" for alias_node in node.names):
+            return node.lineno
+    return None
 
 
 def refuse_module_annotations_none(

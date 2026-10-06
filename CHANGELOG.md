@@ -10,7 +10,9 @@
   docstrings and wrapping ran without a crash and every changed file
   compiles; `modularize` planned 5,669 files and refused 1,318 with
   located reasons. A program nested too deeply for Python's recursion
-  limit is now refused with READ001 instead of failing.
+  limit is now refused with READ001 instead of failing, and a wildcard
+  import inside a block (`try: from fast import *`) is refused with
+  MOD004 at its line instead of the generic MOD007.
 - docs/INTERFACES.md lists the commands, options, exit codes, codes,
   output formats, Python API and safety guarantees kept stable through
   the beta.

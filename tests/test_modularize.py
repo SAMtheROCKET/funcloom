@@ -279,3 +279,12 @@ class ModularizeTests(unittest.TestCase):
         self.assertEqual([diagnostic_info.code
                           for diagnostic_info in report.diagnostics],
                          ["READ001"])
+
+    def test_wildcard_import_inside_a_block_is_refused_with_mod004(self):
+        source_str = ("try:\n    from json import *\nexcept ImportError:\n"
+                      "    pass\nprint(dumps([1]))\n")
+        report = modularize_report(source_text=source_str)
+        self.assertEqual(report.status, "refused")
+        self.assertEqual([(diagnostic_info.code, diagnostic_info.line)
+                          for diagnostic_info in report.diagnostics],
+                         [("MOD004", 2)])
