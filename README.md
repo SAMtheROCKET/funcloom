@@ -5,6 +5,7 @@
 [![Python](https://img.shields.io/pypi/pyversions/funcloom)](https://pypi.org/project/funcloom/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Website](https://img.shields.io/badge/website-funcloom-informational)](https://samtherocket.github.io/funcloom/)
+[![VS Code](https://img.shields.io/visual-studio-marketplace/v/samtherocket.funcloom?label=VS%20Code)](https://marketplace.visualstudio.com/items?itemName=samtherocket.funcloom)
 
 **The Python functionizer.** Turn Python snippets, scripts and Jupyter
 notebooks into reviewable functions and modular packages; every
@@ -61,8 +62,9 @@ empty folder, and anything that cannot be proven safe is refused with a
 reason and line number. If your system blocks the `funcloom` command, use
 `python -m funcloom` instead.
 
-**In VS Code**, install the FuncLoom extension and run *FuncLoom: ...* from
-the Command Palette. It uses the Python interpreter selected in VS Code and
+**In VS Code**, install the [FuncLoom extension](https://marketplace.visualstudio.com/items?itemName=samtherocket.funcloom) from the
+Marketplace (search *FuncLoom* in the Extensions view) and run
+*FuncLoom: ...* from the Command Palette. It uses the Python interpreter selected in VS Code and
 offers to install FuncLoom there with one click.
 
 **On every commit**, add the hook to `.pre-commit-config.yaml`:
@@ -193,7 +195,7 @@ mode retains library paths and data and adds entry-script shims.
   directive is refused too.
 - No performance comparison with Ruff or Black has been established.
   Natural-language code generation and architecture diagrams remain future
-  work. A local VSIX now supplies explicit check, snippet, modularize and
+  work. The VS Code extension supplies explicit check, snippet, modularize and
   refine commands; see [editor setup](editor/funcloom/README.md).
 
 See [snippet context](docs/SNIPPET_WORKFLOW.md),
