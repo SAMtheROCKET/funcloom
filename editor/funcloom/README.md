@@ -8,7 +8,7 @@ verified functions and packages, without leaving the editor.
 1. Install this extension, open a project and trust the workspace.
 2. Run any **FuncLoom:** command from the Command Palette (Ctrl+Shift+P).
 3. The first time, if FuncLoom is not in your Python environment yet, click
-   **Install**. The extension runs `pip install funcloom==0.10.3a0` in that
+   **Install**. The extension runs `pip install funcloom==0.10.4a0` in that
    interpreter, and only after your click.
 
 The interpreter is the one selected in VS Code's Python extension (or

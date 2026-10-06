@@ -11,8 +11,8 @@
     "modularization",
     "code quality"
   ],
-  "version": "0.10.3",
-  "toolVersion": "0.10.3a0",
+  "version": "0.10.4",
+  "toolVersion": "0.10.4a0",
   "publisher": "samtherocket",
   "license": "MIT",
   "preview": true,
