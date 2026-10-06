@@ -4,6 +4,8 @@
 notebooks into reviewable functions and modular packages; every
 transformation is verified or refused with a reason and source location.
 
+Website: [samtherocket.github.io/funcloom](https://samtherocket.github.io/funcloom/)
+
 Part of a family of standalone Python tools: [FuncLoom](https://github.com/SAMtheROCKET/funcloom) (functionizer), [RefacTrail](https://github.com/SAMtheROCKET/refactrail) (refactorizer) and [FlowBlueprint](https://github.com/SAMtheROCKET/flowblueprint) (architect: script or notebook to architecture diagram). Each installs and works on its own.
 
 **Use FuncLoom to:**
