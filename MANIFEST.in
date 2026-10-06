@@ -4,6 +4,7 @@ include docs/LOCAL_SETUP.md docs/RULES.md
 include docs/EXTRACTION_PLANNING.md docs/M2B_*.md
 include docs/SNIPPET_WORKFLOW.md docs/GENERIC_VARIABLES.md
 include docs/MODULARIZE.md docs/REFINE.md docs/RELEASE_PREPARATION.md
+include docs/INTERFACES.md
 recursive-include examples *.py *.ipynb
 recursive-include profiles *.toml
 recursive-include scripts *.py *.sh

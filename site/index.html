@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FuncLoom: turn Python scripts and Jupyter notebooks into functions and packages</title>
+<meta name="description" content="FuncLoom is a free, open-source Python functionizer and auto structurer: it converts scripts, code snippets and Jupyter notebooks into functions, a Pipeline class and a modular package, splits long functions and wraps long lines, and verifies every change. The original files are never changed.">
+<meta name="keywords" content="python functionizer, auto functions generator, auto structurer, notebook to python package, jupyter to module, script to package, modularize python script, split long functions, refactor notebook, auto refactor python">
+<meta name="author" content="Sambit Supriya Dash">
+<link rel="canonical" href="https://samtherocket.github.io/funcloom/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FuncLoom: turn Python scripts and Jupyter notebooks into functions and packages">
+<meta property="og:description" content="FuncLoom is a free, open-source Python functionizer and auto structurer: it converts scripts, code snippets and Jupyter notebooks into functions, a Pipeline class and a modular package, splits long functions and wraps long lines, and verifies every change. The original files are never changed.">
+<meta property="og:url" content="https://samtherocket.github.io/funcloom/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FuncLoom: turn Python scripts and Jupyter notebooks into functions and packages">
+<meta name="twitter:description" content="FuncLoom is a free, open-source Python functionizer and auto structurer: it converts scripts, code snippets and Jupyter notebooks into functions, a Pipeline class and a modular package, splits long functions and wraps long lines, and verifies every change. The original files are never changed.">
+<link rel="alternate" type="text/plain" href="llms.txt" title="llms.txt">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "FuncLoom", "description": "FuncLoom is a free, open-source Python functionizer and auto structurer: it converts scripts, code snippets and Jupyter notebooks into functions, a Pipeline class and a modular package, splits long functions and wraps long lines, and verifies every change. The original files are never changed.", "applicationCategory": "DeveloperApplication", "operatingSystem": "Windows, macOS, Linux", "softwareRequirements": "Python 3.12 or newer", "license": "https://opensource.org/licenses/MIT", "url": "https://samtherocket.github.io/funcloom/", "codeRepository": "https://github.com/SAMtheROCKET/funcloom", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Person", "name": "Sambit Supriya Dash", "url": "https://github.com/SAMtheROCKET"}, "keywords": "python functionizer, auto functions generator, auto structurer, notebook to python package, jupyter to module, script to package, modularize python script, split long functions, refactor notebook, auto refactor python", "downloadUrl": "https://pypi.org/project/funcloom/"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I convert a Jupyter notebook into a Python package?", "acceptedAnswer": {"@type": "Answer", "text": "Run funcloom modularize notebook.ipynb --output my_pkg. FuncLoom writes config, step functions, a Pipeline class and main.py, and checks that the package reproduces the notebook's statements."}}, {"@type": "Question", "name": "Can it split a long Python function automatically?", "acceptedAnswer": {"@type": "Answer", "text": "Yes: funcloom refine script.py --output refined splits functions over the limit (default 50 lines) into verified helpers."}}, {"@type": "Question", "name": "Does it change my original files?", "acceptedAnswer": {"@type": "Answer", "text": "No. Output always goes to a new, empty folder."}}, {"@type": "Question", "name": "Does it run my code?", "acceptedAnswer": {"@type": "Answer", "text": "No. FuncLoom analyses the syntax tree and never imports or executes your code."}}, {"@type": "Question", "name": "Is it free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, MIT-licensed and on PyPI."}}]}</script>
+<style>
+:root{--bg:#fbfbfa;--fg:#1c2128;--muted:#5a6270;--card:#ffffff;
+--line:#e1e4ea;--code:#f2f4f7;--accent:#178a6a}
+@media (prefers-color-scheme:dark){:root{--bg:#111418;--fg:#e8eaee;
+--muted:#a3abb8;--card:#181c22;--line:#2a3039;--code:#1f242c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:32px 20px 64px}
+header nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;
+color:var(--muted);margin-bottom:40px}
+a{color:var(--accent)}
+h1{font-size:clamp(30px,5vw,46px);line-height:1.15;margin:0 0 12px;
+letter-spacing:-.01em}
+.lead{font-size:19px;color:var(--muted);max-width:720px;margin:0 0 24px}
+.status{display:inline-block;font-size:13px;border:1px solid var(--line);
+border-radius:999px;padding:2px 12px;color:var(--muted);margin-bottom:20px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+pre{background:var(--code);border:1px solid var(--line);border-radius:8px;
+padding:14px 16px;overflow-x:auto;margin:0}
+code{font-size:14px}
+.commands{display:grid;gap:10px;margin:28px 0}
+.command{display:grid;gap:4px}
+.command span{color:var(--muted);font-size:14px}
+h2{font-size:24px;margin:48px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;
+padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--muted);font-size:15px}
+figure{margin:32px 0 0;background:#fff;border:1px solid var(--line);
+border-radius:10px;padding:12px;overflow-x:auto}
+figure img{display:block;max-width:100%;height:auto;margin:0 auto}
+figcaption{font-size:13px;color:#5a6270;text-align:center;margin-top:8px}
+details{border-bottom:1px solid var(--line);padding:12px 0}
+summary{cursor:pointer;font-weight:600}
+details p{color:var(--muted);margin:8px 0 0}
+footer{margin-top:56px;font-size:14px;color:var(--muted);
+border-top:1px solid var(--line);padding-top:20px}
+.button{display:inline-block;background:var(--accent);color:#fff;
+text-decoration:none;padding:10px 18px;border-radius:8px;font-weight:600;
+margin-right:10px}
+.button.secondary{background:transparent;color:var(--accent);
+border:1px solid var(--accent)}
+</style>
+</head>
+<body>
+<main>
+<header><nav><strong>FuncLoom</strong> <a href="https://samtherocket.github.io/refactrail/">RefacTrail</a> <a href="https://samtherocket.github.io/flowblueprint/">FlowBlueprint</a></nav></header>
+<span class="status">0.10.3a0 on PyPI, experimental alpha</span>
+<h1>FuncLoom</h1>
+<p class="lead">The Python functionizer: turn long scripts, snippets and notebooks into verified functions and modular packages.</p>
+<p><a class="button" href="https://github.com/SAMtheROCKET/funcloom">GitHub</a><a class="button secondary" href="https://pypi.org/project/funcloom/">PyPI</a></p>
+<pre><code>pip install funcloom</code></pre>
+<div class="commands"><div class="command"><pre><code>funcloom modularize analysis.ipynb --output analysis_pkg</code></pre><span>a package with config, step functions, a Pipeline class and main.py</span></div><div class="command"><pre><code>funcloom modularize project/ --output project_pkg</code></pre><span>a whole folder converted, with an orchestrator</span></div><div class="command"><pre><code>funcloom refine script.py --output refined</code></pre><span>long functions split and long lines wrapped, in a copy</span></div><div class="command"><pre><code>funcloom check src</code></pre><span>findings against the function-size, docstring and annotation profile</span></div></div>
+
+<h2>What it does</h2>
+<div class="grid"><div class="card"><h3>Notebooks to packages</h3><p>Cells become steps; FuncLoom writes a package with configuration, step functions, a Pipeline class and main.py.</p></div><div class="card"><h3>Long functions split</h3><p>Functions over the size limit are split into helpers with explicit inputs and outputs, including loop, if and with bodies.</p></div><div class="card"><h3>Verified, not guessed</h3><p>Generated code must compile, keep the original statements and resolve its names; otherwise FuncLoom refuses and says why.</p></div><div class="card"><h3>Originals untouched</h3><p>Output always goes to a new folder; nothing is overwritten.</p></div><div class="card"><h3>Readable names</h3><p>Snippets get questions about unclear names and mathematical or domain variables, never silent guesses.</p></div><div class="card"><h3>Works with your tools</h3><p>CLI, Python API, VS Code extension and a pre-commit hook; no AI model or network needed.</p></div></div>
+<h2>Who it is for</h2>
+<div class="grid"><div class="card"><h3>Data scientists</h3><p>turn an exploratory notebook into code a team can test and ship.</p></div><div class="card"><h3>Developers</h3><p>break up long scripts and functions without changing behaviour.</p></div><div class="card"><h3>Students</h3><p>hand in coursework as clean, structured modules.</p></div><div class="card"><h3>Teams</h3><p>standardise function size, docstrings and structure across a codebase.</p></div></div>
+<h2>Questions</h2>
+<details><summary>How do I convert a Jupyter notebook into a Python package?</summary><p>Run <code>funcloom modularize notebook.ipynb --output my_pkg</code>. FuncLoom writes config, step functions, a Pipeline class and main.py, and checks that the package reproduces the notebook&#x27;s statements.</p></details><details><summary>Can it split a long Python function automatically?</summary><p>Yes: <code>funcloom refine script.py --output refined</code> splits functions over the limit (default 50 lines) into verified helpers.</p></details><details><summary>Does it change my original files?</summary><p>No. Output always goes to a new, empty folder.</p></details><details><summary>Does it run my code?</summary><p>No. FuncLoom analyses the syntax tree and never imports or executes your code.</p></details><details><summary>Is it free?</summary><p>Yes, MIT-licensed and on PyPI.</p></details>
+<h2>One family of tools</h2>
+<div class="grid"><div class="card"><h3><a href="https://samtherocket.github.io/funcloom/">FuncLoom</a></h3><p>the functionizer: scripts and notebooks to functions and packages</p></div><div class="card"><h3><a href="https://samtherocket.github.io/refactrail/">RefacTrail</a></h3><p>the refactorizer: linter, formatter and verified refactoring</p></div><div class="card"><h3><a href="https://samtherocket.github.io/flowblueprint/">FlowBlueprint</a></h3><p>the architect: code to architecture diagrams</p></div></div>
+<footer>FuncLoom is MIT-licensed open source by
+Sambit Supriya Dash. Python 3.12 or newer. No AI model, account or network
+connection is needed. <a href="https://github.com/SAMtheROCKET/funcloom">Source on GitHub</a>.</footer>
+</main>
+</body>
+</html>
