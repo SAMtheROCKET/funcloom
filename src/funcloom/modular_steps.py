@@ -6,12 +6,17 @@ from contextvars import ContextVar
 import keyword
 import re
 from typing import Iterator
+import weakref
 
 from funcloom.modular_models import (
     ProgramSource, StepPlan, StepRecord, TopStatement,
 )
 
 STEP_BODY_TARGET_INT = 28
+# Names each analysed statement may unbind. Statement nodes are never
+# changed in place (rewrites work on copies), so the result per node
+# stays valid; entries go when their node does.
+MAY_DELETES_CACHE: weakref.WeakKeyDictionary = weakref.WeakKeyDictionary()
 TRUST_WITH_VAR: ContextVar[bool] = ContextVar("funcloom_trust_with",
                                               default=False)
 SUPPRESSING_NAMES_TUPLE = (
@@ -200,7 +205,11 @@ def collect_may_deletes_set(node: ast.stmt) -> set[str]:
         set[str]: Deleted names and exception-handler names.
     Warnings:
         Over-approximates by including deletions inside nested code.
+        Results are cached per node (see MAY_DELETES_CACHE).
     """
+    cached_frozenset = MAY_DELETES_CACHE.get(node)
+    if cached_frozenset is not None:
+        return set(cached_frozenset)
     names_set: set[str] = set()
     for inner_node in ast.walk(node):
         if isinstance(
@@ -208,6 +217,7 @@ def collect_may_deletes_set(node: ast.stmt) -> set[str]:
             names_set.add(inner_node.id)
         elif isinstance(inner_node, ast.ExceptHandler) and inner_node.name:
             names_set.add(inner_node.name)
+    MAY_DELETES_CACHE[node] = frozenset(names_set)
     return names_set
 
 

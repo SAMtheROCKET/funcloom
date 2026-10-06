@@ -1,5 +1,16 @@
 # Unreleased
 
+- `refine` (and RefacTrail's `fix`) is up to 3-4 times faster on very
+  large files: the names a statement may unbind are computed once per
+  statement instead of once per candidate split. Output is unchanged on
+  all 584 standard-library and 6,988 corpus files; the slowest corpus
+  file now takes 13 s instead of over 20 s.
+- Robustness sweep: `refine` with splitting, docstrings and wrapping ran
+  on the 6,988-file corpus without a crash, and every changed file
+  compiles.
+- docs/INTERFACES.md lists the commands, options, exit codes, codes,
+  output formats, Python API and safety guarantees kept stable through
+  the beta.
 - `funcloom` without arguments shows a short quick start.
 - VS Code: the extension uses the interpreter selected in the Python
   extension when `funcloom.pythonPath` is empty (the new default), and

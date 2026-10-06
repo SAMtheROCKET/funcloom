@@ -155,8 +155,9 @@ See [snippet context](docs/SNIPPET_WORKFLOW.md),
 [generic variable names](docs/GENERIC_VARIABLES.md),
 [extraction planning](docs/EXTRACTION_PLANNING.md),
 [modularization](docs/MODULARIZE.md), [refinement](docs/REFINE.md),
-[rule coverage](docs/RULES.md), and
-[local/editor setup](docs/LOCAL_SETUP.md).
+[rule coverage](docs/RULES.md),
+[local/editor setup](docs/LOCAL_SETUP.md), and the
+[stable interfaces](docs/INTERFACES.md) kept through the beta.
 
 ## Development and release checks
 
