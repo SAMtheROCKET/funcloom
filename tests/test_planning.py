@@ -153,7 +153,7 @@ class PlanningTests(unittest.TestCase):
                                  outputs)
 
     def test_delete_and_control_flow_stay_refused(self) -> None:
-        for statement in ("del amount", "if amount:\n    amount = 1"):
+        for statement in ("del amount", "try:\n    amount = 1\nfinally:\n    pass"):
             with self.subTest(statement=statement):
                 self.assert_refused(self.plan(
                     "amount = 2\n" + statement + "\n", 2,
@@ -195,8 +195,6 @@ class PlanningTests(unittest.TestCase):
 
     def test_branches_loops_with_and_definitions_are_refused(self) -> None:
         for source in (
-            "if True:\n    result = 1\n",
-            "for item in ():\n    result = item\n",
             "with manager as handle:\n    result = handle\n",
             "def inner():\n    return 1\n",
         ):

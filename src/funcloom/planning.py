@@ -4,9 +4,8 @@ import ast
 from pathlib import Path
 
 from funcloom.config import RuleProfile, validate_profile_none
-from funcloom.plan_analysis import (
-    analyze_selection_none, resolve_prefix_bindings_info
-)
+from funcloom.plan_analysis import resolve_prefix_bindings_info
+from funcloom.plan_control import analyze_region_none
 from funcloom.plan_bindings import resolve_bindings_none
 from funcloom.plan_dispatch import check_dispatch_none
 from funcloom.plan_effects import record_effect_inventory_none
@@ -139,7 +138,8 @@ def prepare_candidate_none(
         if plan_report.diagnostics:
             return
         bindings_info = resolve_prefix_bindings_info(module_node, plan_report)
-        analyze_selection_none(statements_list, bindings_info, plan_report)
+        analyze_region_none(module_node, statements_list, bindings_info,
+                            plan_report)
         if not plan_report.diagnostics:
             check_dispatch_none(module_node, statements_list, plan_report)
         if not plan_report.diagnostics:

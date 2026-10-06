@@ -12,6 +12,13 @@
   unconditional binding) becomes a function input; the plan notes the
   assumption. Ambiguity from a function's `global` declaration or a
   namespace call is still refused.
+- M2b.8: `plan` and snippet drafts accept `if`, `for` and `while` blocks
+  (with `else`, `break` and `continue`). Definite assignment decides
+  which reads can rely on earlier assignments; a name set on only some
+  paths is passed in when it had an earlier value, left out of the return
+  when nothing else in the file reads it (stated in the plan), and
+  otherwise refused with the new PLAN009. `try`, `with`, `match` and `del`
+  stay refused.
 
 # 0.10.5a0 - VS Code Marketplace and a simpler README, 2026-10-07
 

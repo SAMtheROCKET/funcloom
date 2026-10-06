@@ -115,8 +115,11 @@ statements, unpacking and chained assignment are also accepted; see
 [M2B_STATEMENTS.md](M2B_STATEMENTS.md). Since M2b.6 list, set and dict
 comprehensions are accepted too; their free reads are resolved like any
 other read (see [M2B_BINDINGS.md](M2B_BINDINGS.md#m2b6-comprehensions)).
-Control flow, `del`, generator expressions and lambdas are still refused
-(PLAN002). Whole-repo modularization is available through the
+Since M2b.8 `if`, `for` and `while` blocks (with `else`, `break` and
+`continue`) are accepted around supported statements; see
+[M2B_STATEMENTS.md](M2B_STATEMENTS.md#m2b8-if-for-and-while). `try`,
+`with`, `match`, `del`, definitions, generator expressions and lambdas
+are still refused (PLAN002). Whole-repo modularization is available through the
 separate `modularize` command.
 
 ## Refusal diagnostics
@@ -124,13 +127,14 @@ separate `modularize` command.
 | Code | Reason |
 | --- | --- |
 | PLAN001 | Empty/out-of-file selection, partial statement, nested scope, or semicolon group |
-| PLAN002 | Unsupported selected statement or expression: control flow, `del`, annotated assignment, nested unpacking, lambdas, generator expressions, async comprehensions, `:=`, f-strings, frame-dependent names such as `locals()`, annotation moves, or multiline string literals |
+| PLAN002 | Unsupported selected statement or expression: `try`, `with`, `match`, `del`, annotated assignment, nested unpacking, lambdas, generator expressions, async comprehensions, `:=`, f-strings, frame-dependent names such as `locals()`, annotation moves, or multiline string literals |
 | PLAN003 | A name read by the region does not resolve as `direct` before it; the message gives its status |
 | PLAN004 | Proposed function name collides with a source identifier or builtin |
 | PLAN005 | Retired in 0.4.0a0: an unsupported prefix no longer refuses a plan by itself |
 | PLAN006 | Draft function/caller would exceed a configured hard size or line cap |
 | PLAN008 | Module code defined before the region could observe a value the draft delays, or rebind one it passes or returns (M2B_CALLS.md) |
 | PLAN007 | Draft compilation, structural validation, or bounded analysis failed |
+| PLAN009 | A name the region sets on only some paths has no earlier value, and other code in the file reads it, so the draft cannot return it reliably |
 | PARSE001 / READ001 | Full input source failed contextual syntax validation or reading |
 
 Exit **0** means a review candidate was emitted, **1** means the plan was

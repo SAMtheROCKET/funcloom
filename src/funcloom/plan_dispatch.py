@@ -3,10 +3,10 @@
 import ast
 from dataclasses import dataclass, field
 
-from funcloom.plan_analysis import split_statement_parts_tuple
 from funcloom.plan_bindings import (
     DYNAMIC_NAMESPACE_NAMES_TUPLE, list_definition_time_nodes_list,
 )
+from funcloom.plan_control import list_written_names_list
 from funcloom.plan_models import ExtractionPlan, append_issue_none
 
 DEFERRED_SCOPES_TUPLE = (
@@ -296,7 +296,7 @@ def check_delayed_reads_none(
     """
     first_write_dict: dict[str, int] = {}
     for index_int, statement_node in enumerate(statements_list):
-        for name_node in split_statement_parts_tuple(statement_node)[1]:
+        for name_node in list_written_names_list(statement_node):
             first_write_dict.setdefault(name_node.id, index_int)
     for name_str, write_index_int in first_write_dict.items():
         later_list = [index_int for index_int in dispatch_list

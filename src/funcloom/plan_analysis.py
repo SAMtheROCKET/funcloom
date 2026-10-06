@@ -289,48 +289,6 @@ def resolve_prefix_bindings_info(
     return bindings_info
 
 
-def analyze_selection_none(
-    statements_list: list[ast.stmt], bindings_info: ModuleBindings,
-    plan_report: ExtractionPlan,
-) -> None:
-    """Derive region inputs and all assigned outputs in statement order.
-
-    Args:
-        statements_list (list[ast.stmt]): Whole selected module statements.
-        bindings_info (ModuleBindings): Bindings from the supported prefix.
-        plan_report (ExtractionPlan): Contract and diagnostic accumulator.
-    Returns:
-        None: Records each external read and each unique assigned name.
-    Warnings:
-        Returning all writes preserves names only; behavior needs review.
-    """
-    assigned_set: set[str] = set()
-    inputs_set: set[str] = set()
-    for statement_node in statements_list:
-        parts_tuple = split_statement_parts_tuple(statement_node)
-        if parts_tuple is None:
-            append_issue_none(plan_report, "PLAN002", statement_node.lineno,
-                              f"{type(statement_node).__name__} is outside "
-                              "the supported statement forms.")
-            continue
-        reads_list, names_list = parts_tuple
-        issue_str = next(filter(None, map(find_expression_issue_str, (
-            node for node in reads_list if isinstance(node, ast.expr)
-        ))), None)
-        if issue_str is not None:
-            append_issue_none(plan_report, "PLAN002", statement_node.lineno,
-                              f"Unsupported value: {issue_str}.")
-            continue
-        record_inputs_none(read_names_list(reads_list), assigned_set,
-                           inputs_set, bindings_info, plan_report)
-        for name_node in names_list:
-            if name_node.id not in assigned_set:
-                plan_report.outputs.append(make_binding_fact(
-                    name_node.id, name_node.lineno, bindings_info,
-                ))
-            assigned_set.add(name_node.id)
-
-
 def record_inputs_none(
     names_list: list[ast.Name], assigned_set: set[str], inputs_set: set[str],
     bindings_info: ModuleBindings, plan_report: ExtractionPlan,

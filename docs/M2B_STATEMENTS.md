@@ -50,6 +50,36 @@ The example `examples/plan_refused.py` now shows a value set on only one
 branch with no earlier value (PLAN003, `possibly_unbound`), because its
 old `+=` case and, since M2b.7, its `ambiguous` case are supported.
 
+## M2b.8: if, for and while
+
+Selected regions may contain `if`/`elif`/`else`, `for` and `while`
+blocks (with `else`, `break` and `continue`) whose bodies hold the
+supported statements. `try`, `with`, `match`, `del` and definitions stay
+refused (PLAN002).
+
+Definite assignment decides which names a read can rely on: inside a
+branch, names assigned earlier in it; after `if`/`else`, names assigned
+in both branches; after a loop, nothing assigned in its body (it may run
+zero times). Any other read must be a valid input (PLAN003 otherwise).
+Every name the region assigns is then settled:
+
+- set on every path: returned as usual;
+- set on only some paths but bound before the region (or read by the
+  region first): passed in, so it keeps its earlier value when the region
+  does not assign it; the plan says so;
+- set on only some paths with no earlier value, and nothing else in the
+  file reads it (no read outside the region, no `global` use, no string
+  of its name, no namespace call): not returned; the plan says another
+  module importing it would no longer see it. A loop variable that is
+  only used inside its loop is the usual case;
+- otherwise the region is refused with PLAN009.
+
+Calls inside blocks are covered by PLAN008. Ten regressions
+(tests/test_plan_control_flow.py) compare the original and the draft on
+trusted, test-authored scripts (accumulating loops, both outcomes of a
+branch, a `while` loop with `break` and `continue`, nested loops with a
+comprehension and `for`/`else`) and check the refusals.
+
 ## Snippets
 
 The snippet workflow handles the same forms. Mutated or unpacked values
