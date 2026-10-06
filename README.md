@@ -29,7 +29,9 @@ Built for developers, data scientists, data analysts and students; pair it
 with RefacTrail to check and refactor the result and FlowBlueprint to draw
 its architecture for managers and product owners.
 
-**0.10.3a0 is an experimental alpha, published on PyPI.** It has no runtime
+**Status: alpha.** The latest release on PyPI is 0.10.3a0 (experimental
+alpha); the main branch has newer, unreleased improvements (see
+[What's new on main](#whats-new-on-main-not-yet-on-pypi)). It has no runtime
 dependencies and does not need an LLM, account or network connection.
 Python 3.12 or newer is required. CI tests CPython 3.12-3.14 on Windows,
 Linux and macOS, and verifies the built packages on all three.
@@ -53,6 +55,11 @@ funcloom modularize notebook.ipynb --output my_package
 funcloom refine script.py --output script_refined.py
 ```
 
+<!-- GIF placeholder: docs/media/funcloom-modularize.gif
+     Terminal, about 25 s: `funcloom modularize analysis.ipynb --output
+     analysis_pkg`, the generated tree, then `python analysis_pkg/main.py`
+     giving the notebook's result. See docs/MEDIA.md. -->
+
 Your original files are never changed: results go to a new file or an
 empty folder, and anything that cannot be proven safe is refused with a
 reason and line number. If your system blocks the `funcloom` command, use
@@ -71,6 +78,41 @@ repos:
     hooks:
       - id: funcloom-check
 ```
+
+## What's new on main (not yet on PyPI)
+
+To try these now:
+`pip install "git+https://github.com/SAMtheROCKET/funcloom"`
+
+- **Faster `refine` on very large files:** a repeated scan was removed;
+  the output is identical on all 7,572 files checked.
+- **Clearer refusals:** a program nested too deeply for Python is refused
+  with READ001, and `from x import *` inside a `try`/`if` block with
+  MOD004 at its line, instead of a crash or a generic MOD007.
+- **Robustness:** `refine` ran on a 6,988-file corpus of real packages
+  without a crash; `modularize` planned 5,669 of those files and refused
+  the rest with located reasons.
+- **Stable interfaces:** [docs/INTERFACES.md](docs/INTERFACES.md) lists
+  the commands, exit codes, codes and API kept stable through the beta.
+
+## Office machines and older Python
+
+FuncLoom needs Python 3.12 or newer, but your project does not: the tool
+only reads your code, so it can run on its own Python next to a project
+that stays on 3.9, 3.10 or 3.11. Neither of these needs administrator
+rights; [uv](https://docs.astral.sh/uv/) downloads its own Python 3.12
+into your user folder:
+
+```bash
+uvx --python 3.12 funcloom check script.py                  # one-off run
+uv tool install --python 3.12 funcloom                      # or install once
+funcloom modularize notebook.ipynb --output my_package
+```
+
+`pipx install --python <path to a Python 3.12> funcloom` works the same
+way. If `pip` says `from versions: none`, your Python is older than 3.12
+or pip is pointed at a company mirror that does not carry the package
+(check with `python -m pip config list`, and ask IT to allow it).
 
 ### From source (development)
 
@@ -133,6 +175,11 @@ without `--output` only plans; `--show-files` includes the generated text.
 `--format json` exposes the corresponding report contract.
 
 ## Generated package and limits
+
+<!-- GIF placeholder: docs/media/funcloom-refine.gif
+     VS Code diff, about 15 s: a 120-line function before, and the
+     refined copy with verified helper functions after. See docs/MEDIA.md.
+-->
 
 A typical package has `config.py`, `functions.py`/`models.py`, `steps.py`,
 `pipeline.py` and `main.py`. Its initial imports are retained once, in source
