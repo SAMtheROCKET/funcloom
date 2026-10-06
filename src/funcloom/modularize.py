@@ -123,6 +123,36 @@ def plan_program_tuple(
     source_info: ProgramSource, package_str: str, profile_info: RuleProfile,
     options_info: RefineOptions, script_str: str = "main.py",
 ) -> tuple[ModularReport, dict[str, str] | None]:
+    """Plan and verify a package, refusing programs nested too deeply.
+
+    Args:
+        source_info (ProgramSource): Loaded program.
+        package_str (str): Package name for the generated code.
+        profile_info (RuleProfile): Line length and limits.
+        options_info (RefineOptions): Splitting and documentation.
+        script_str (str): File name of the script that runs the package.
+    Returns:
+        tuple: Report, and generated files when planning succeeded.
+    Warnings:
+        A program whose syntax tree exceeds Python's recursion limit
+        during analysis is refused with READ001 instead of failing.
+    """
+    try:
+        return plan_checked_program_tuple(source_info, package_str,
+                                          profile_info, options_info,
+                                          script_str)
+    except RecursionError:
+        report_info = ModularReport(source_info.name, package_str)
+        add_diagnostic_none(report_info, "READ001", 1, (
+            "The program is nested too deeply to analyse within Python's "
+            "recursion limit; nothing was generated."))
+        return report_info, None
+
+
+def plan_checked_program_tuple(
+    source_info: ProgramSource, package_str: str, profile_info: RuleProfile,
+    options_info: RefineOptions, script_str: str = "main.py",
+) -> tuple[ModularReport, dict[str, str] | None]:
     """Plan and verify the package for one program without writing it.
 
     Args:

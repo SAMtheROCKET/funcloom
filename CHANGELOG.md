@@ -6,9 +6,11 @@
   corpus file under the profiler). Output is unchanged on
   all 584 standard-library and 6,988 corpus files; the slowest corpus
   file now takes 13 s instead of over 20 s.
-- Robustness sweep: `refine` with splitting, docstrings and wrapping ran
-  on the 6,988-file corpus without a crash, and every changed file
-  compiles.
+- Robustness sweeps on the 6,988-file corpus: `refine` with splitting,
+  docstrings and wrapping ran without a crash and every changed file
+  compiles; `modularize` planned 5,669 files and refused 1,318 with
+  located reasons. A program nested too deeply for Python's recursion
+  limit is now refused with READ001 instead of failing.
 - docs/INTERFACES.md lists the commands, options, exit codes, codes,
   output formats, Python API and safety guarantees kept stable through
   the beta.

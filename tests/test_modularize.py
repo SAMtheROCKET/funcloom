@@ -271,3 +271,11 @@ class ModularizeTests(unittest.TestCase):
         self.assertEqual(report["status"], "planned")
         self.assertNotIn("text", report["files"][0])
         self.assertEqual(list(self.root.iterdir()), [])
+
+    def test_too_deeply_nested_program_is_refused_not_crashed(self):
+        nested_str = "x = " + "[" * 190 + "]" * 190 + "\nprint(x)\n"
+        report = modularize_report(source_text=nested_str)
+        self.assertEqual(report.status, "refused")
+        self.assertEqual([diagnostic_info.code
+                          for diagnostic_info in report.diagnostics],
+                         ["READ001"])
