@@ -24,7 +24,7 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/SAMtheROCKET/funcloom"
+Homepage = "https://samtherocket.github.io/funcloom/"
 Repository = "https://github.com/SAMtheROCKET/funcloom"
 Issues = "https://github.com/SAMtheROCKET/funcloom/issues"
 Documentation = "https://github.com/SAMtheROCKET/funcloom#readme"
