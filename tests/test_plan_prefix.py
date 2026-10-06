@@ -73,16 +73,33 @@ class PrefixTests(unittest.TestCase):
         self.assertTrue({"call", "control_flow", "scope_boundary",
                          "import"} <= kinds)
 
-    def test_conditionally_bound_input_is_refused(self):
-        source = SCRIPT_SOURCE.replace('    status = "ok"',
-                                       "    tax_rate = 0.2")
-        report = self.plan(source, 17, 18)
-        self.assertEqual(report.status, "refused")
-        self.assertIsNone(report.function_preview)
-        message = report.diagnostics[-1].message
+    def test_conditionally_rebound_input_is_passed_in(self):
+        # M2b.7: bound on every path, so the caller passes its value.
+        for condition in ("math.isfinite", "math.isnan"):
+            with self.subTest(condition=condition):
+                source = SCRIPT_SOURCE.replace(
+                    '    status = "ok"', "    tax_rate = 0.2").replace(
+                    "math.isfinite", condition)
+                report = self.plan(source, 17, 18)
+                self.assertEqual(report.status, "candidate_for_review")
+                statuses = {item.name: item.status
+                            for item in report.name_resolutions}
+                self.assertEqual(statuses["tax_rate"], "ambiguous")
+                self.assertTrue(any("'tax_rate' may be set by several"
+                                    in item for item in report.assumptions))
+                self.assert_same_results(source, report)
+
+    def test_rebinding_loop_target_is_passed_in(self):
+        source = "x = 0\nfor x in range(3):\n    pass\nresult = x * 2\n"
+        report = self.plan(source, 4, 4)
+        self.assertEqual(report.status, "candidate_for_review")
+        self.assert_same_results(source, report)
+
+    def test_conditional_deletion_stays_refused(self):
+        source = "x = 1\nflag = False\nif flag:\n    del x\nresult = x\n"
+        report = self.plan(source, 5, 5)
         self.assertEqual(report.diagnostics[-1].code, "PLAN003")
-        self.assertIn("tax_rate", message)
-        self.assertIn("ambiguous", message)
+        self.assertIn("possibly_unbound", report.diagnostics[-1].message)
 
     def test_function_that_rebinds_input_makes_it_ambiguous(self):
         source = ("rate = 0.1\ndef change():\n    global rate\n"

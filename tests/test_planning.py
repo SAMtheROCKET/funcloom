@@ -209,14 +209,18 @@ class PlanningTests(unittest.TestCase):
              "possibly_unbound"),
             ("from unknown import *\nresult = base\n", 2,
              "possibly_unbound"),
-            ("base = 1\nif flag:\n    base = 2\nresult = base\n", 4,
-             "ambiguous"),
             ("base = 1\ndel base\nresult = base\n", 3, "unbound"),
         ):
             with self.subTest(source=source):
                 report = self.plan(source, line, line)
                 self.assert_refused(report, "PLAN003")
                 self.assertIn(status, report.diagnostics[-1].message)
+
+    def test_module_level_ambiguous_reads_are_inputs(self) -> None:
+        report = self.plan(
+            "base = 1\nif flag:\n    base = 2\nresult = base\n", 4, 4)
+        self.assertEqual(report.status, "candidate_for_review")
+        self.assertEqual([item.name for item in report.inputs], ["base"])
 
     def test_any_prefix_is_allowed_when_reads_are_direct(self) -> None:
         for source, line in (

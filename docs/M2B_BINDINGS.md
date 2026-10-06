@@ -130,9 +130,22 @@ together with a module variable of the same name; behavior is unchanged,
 but the proposed name (for example a `_float` suffix) can then describe
 the module value rather than the loop item.
 
+## M2b.7: module-level ambiguous reads
+
+An `ambiguous` read becomes an input when none of its reaching sites is
+call-dependent. Such a name had an unconditional binding before the read
+and can only have been rebound since (conditional assignments, loop
+targets, imports), never deleted, so the caller can pass its current
+value; the plan adds an assumption saying so. Ambiguous reads reached by a
+`global` declaration or namespace call inside a function stay refused,
+because that function could also delete the name and the draft would then
+fail earlier than the original. Regressions compare the original and the
+draft for both outcomes of the condition and for a rebinding loop target;
+a conditional `del` stays refused as `possibly_unbound`.
+
 ## Next boundary
 
-Remaining M2b work: consider accepting `ambiguous` reads; widen the
+Remaining M2b work: widen the
 selected statements themselves (control flow); resolve free reads inside
 function and lambda bodies; path-sensitive
 exception and alias contracts; definition-time effects; a concrete-syntax

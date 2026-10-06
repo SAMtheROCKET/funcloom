@@ -96,10 +96,14 @@ discarded. An annotation-only statement does not establish a value binding.
 Why this is sound for the supported region: the prefix runs unchanged and
 at the same moment, and the draft caller passes each input's current value
 at the selection's position. A `direct` status guarantees the name is
-bound there by one known site. Reads that are `ambiguous`, `possibly_unbound`,
-`unbound`, `builtin_lexical`, `builtin_fallback`, `module_implicit` or
-`unresolved` are refused with PLAN003 and the status in the message. Some
-of these (for example `ambiguous`) may be accepted in a later increment.
+bound there by one known site. Since M2b.7 an `ambiguous` read is also an
+input when every site reaching it is a module-level statement: an
+unconditional binding precedes it and later sites can only rebind, so the
+name is bound on every path and the caller passes whichever value it
+holds. An ambiguous read reached by a function's `global` declaration or a
+namespace call stays refused (that function could delete the name). Reads
+that are `possibly_unbound`, `unbound`, `builtin_fallback` or `unresolved`
+are refused with PLAN003 and the status in the message.
 
 Since 0.5.0a0 `builtin_lexical` and `module_implicit` reads are not
 refused: they stay free names in the draft (see M2B_CALLS.md).

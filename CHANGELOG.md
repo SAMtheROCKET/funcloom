@@ -7,6 +7,11 @@
   (they run later than the drafted function), as do async comprehensions.
   Seven regressions compare the original and the draft on trusted,
   test-authored scripts.
+- M2b.7: a read that is `ambiguous` only because module-level code may
+  rebind it (a conditional assignment or loop target after an
+  unconditional binding) becomes a function input; the plan notes the
+  assumption. Ambiguity from a function's `global` declaration or a
+  namespace call is still refused.
 
 # 0.10.5a0 - VS Code Marketplace and a simpler README, 2026-10-07
 

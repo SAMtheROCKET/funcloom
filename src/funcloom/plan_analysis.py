@@ -234,10 +234,33 @@ def record_prefix_annotations_dict(
     return annotations_dict
 
 
+def accepts_input_bool(resolution_info) -> bool:
+    """Decide whether a resolved read can be passed in as an input.
+
+    Args:
+        resolution_info (NameResolution): Lexical status and its sites.
+    Returns:
+        bool: True for direct reads, and for ambiguous reads whose
+            reaching sites are all module-level statements.
+    Warnings:
+        An ambiguous name is bound on every path (an unconditional
+        binding precedes it and no deletion can follow); the caller
+        passes whichever value the module holds at the region. A
+        function declaring the name global could delete it, so
+        call-dependent sites keep the read refused.
+    """
+    if resolution_info.status == "direct":
+        return True
+    return resolution_info.status == "ambiguous" and not any(
+        site.certainty == "call_dependent"
+        for site in resolution_info.sites
+    )
+
+
 def resolve_prefix_bindings_info(
     module_node: ast.Module, plan_report: ExtractionPlan,
 ) -> ModuleBindings:
-    """Accept selected reads whose lexical resolution is direct.
+    """Accept selected reads that can safely become function inputs.
 
     Args:
         module_node (ast.Module): Whole parsed source.
@@ -246,7 +269,8 @@ def resolve_prefix_bindings_info(
         ModuleBindings: Direct names, statuses and declared annotations.
     Warnings:
         Any compilable prefix is allowed; it stays in place and is never
-        moved. Only reads resolved as direct become function inputs.
+        moved. Only direct reads and module-level ambiguous reads become
+        function inputs.
     """
     bindings_info = ModuleBindings()
     bindings_info.annotations = record_prefix_annotations_dict(
@@ -254,7 +278,7 @@ def resolve_prefix_bindings_info(
     )
     for resolution_info in plan_report.name_resolutions:
         bindings_info.statuses[resolution_info.name] = resolution_info
-        if resolution_info.status != "direct":
+        if not accepts_input_bool(resolution_info):
             continue
         sites_list = [site for site in resolution_info.sites
                       if site.kind in BINDING_KINDS_TUPLE]
@@ -337,6 +361,14 @@ def record_inputs_none(
         plan_report.inputs.append(make_binding_fact(
             name_node.id, name_node.lineno, bindings_info,
         ))
+        status_info = bindings_info.statuses.get(name_node.id)
+        if name_node.id in bindings_info.bound and status_info is not None \
+                and status_info.status == "ambiguous":
+            plan_report.assumptions.append(
+                f"'{name_node.id}' may be set by several statements before "
+                "the region; the draft receives whichever value the module "
+                "holds when the region starts."
+            )
         if name_node.id not in bindings_info.bound:
             append_issue_none(plan_report, "PLAN003", name_node.lineno,
                               explain_unresolved_read_str(name_node.id,
@@ -372,7 +404,8 @@ def explain_unresolved_read_str(
     Returns:
         str: Refusal message including the lexical status when known.
     Warnings:
-        Only a direct status is accepted for extraction inputs.
+        Direct reads, and ambiguous reads without call-dependent sites,
+        are accepted as extraction inputs.
     """
     resolution_info = bindings_info.statuses.get(name_str)
     if resolution_info is None:
