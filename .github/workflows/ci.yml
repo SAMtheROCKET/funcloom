@@ -28,3 +28,6 @@ jobs:
         with:
           node-version: '22'
       - run: node --test editor/funcloom/test/runner.test.js editor/funcloom/test/setup.test.js
+      - run: node -e "require('./editor/funcloom/extension.js')"
+      - name: Package the extension
+        run: python3 scripts/package_editor.py --extension editor/funcloom --output "$RUNNER_TEMP/funcloom.vsix"

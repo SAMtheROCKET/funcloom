@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 256 256">
+<defs>
+ <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#22b088"/><stop offset="1" stop-color="#0f5f48"/>
+ </linearGradient>
+ <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#fff" stop-opacity=".22"/>
+  <stop offset=".5" stop-color="#fff" stop-opacity="0"/>
+ </linearGradient>
+</defs>
+<rect x="8" y="8" width="240" height="240" rx="56" fill="url(#g)"/>
+<rect x="8" y="8" width="240" height="240" rx="56" fill="url(#shine)"/>
+<rect x="8.75" y="8.75" width="238.5" height="238.5" rx="55.25" fill="none"
+      stroke="#fff" stroke-opacity=".18" stroke-width="1.5"/>
+<g fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"
+   stroke-linejoin="round">
+
+ <path d="M90 56 C70 56 68 70 68 88 V108 C68 120 62 128 50 128
+          C62 128 68 136 68 148 V168 C68 186 70 200 90 200"/>
+ <path d="M166 56 C186 56 188 70 188 88 V108 C188 120 194 128 206 128
+          C194 128 188 136 188 148 V168 C188 186 186 200 166 200"/>
+ <g stroke-width="9" stroke-linecap="butt">
+  <path d="M82 100 H118 M138 100 H174 M82 128 H90 M110 128 H146 M166 128 H174 M82 156 H118 M138 156 H174 M100 82 V90 M100 110 V146 M100 166 V174 M128 82 V118 M128 138 V174 M156 82 V90 M156 110 V146 M156 166 V174"/>
+ </g>
+
+</g>
+</svg>

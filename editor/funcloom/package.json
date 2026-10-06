@@ -15,6 +15,15 @@
   "toolVersion": "0.10.4a0",
   "publisher": "samtherocket",
   "license": "MIT",
+  "icon": "icon.png",
+  "homepage": "https://samtherocket.github.io/funcloom/",
+  "bugs": {
+    "url": "https://github.com/SAMtheROCKET/funcloom/issues"
+  },
+  "galleryBanner": {
+    "color": "#0f5f48",
+    "theme": "dark"
+  },
   "preview": true,
   "engines": {
     "vscode": "^1.90.0"
