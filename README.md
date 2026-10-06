@@ -29,9 +29,8 @@ Built for developers, data scientists, data analysts and students; pair it
 with RefacTrail to check and refactor the result and FlowBlueprint to draw
 its architecture for managers and product owners.
 
-**Status: alpha.** The latest release on PyPI is 0.10.3a0 (experimental
-alpha); the main branch has newer, unreleased improvements (see
-[What's new on main](#whats-new-on-main-not-yet-on-pypi)). It has no runtime
+**Status: alpha.** The latest release on PyPI is 0.10.4a0 (experimental
+alpha; see [what's new](#whats-new-in-0104a0)). It has no runtime
 dependencies and does not need an LLM, account or network connection.
 Python 3.12 or newer is required. CI tests CPython 3.12-3.14 on Windows,
 Linux and macOS, and verifies the built packages on all three.
@@ -74,15 +73,12 @@ offers to install FuncLoom there with one click.
 ```yaml
 repos:
   - repo: https://github.com/SAMtheROCKET/funcloom
-    rev: v0.10.3a0
+    rev: v0.10.4a0
     hooks:
       - id: funcloom-check
 ```
 
-## What's new on main (not yet on PyPI)
-
-To try these now:
-`pip install "git+https://github.com/SAMtheROCKET/funcloom"`
+## What's new in 0.10.4a0
 
 - **Faster `refine` on very large files:** a repeated scan was removed;
   the output is identical on all 7,572 files checked.

@@ -1,4 +1,4 @@
-# Unreleased
+# 0.10.4a0 - beta preparation: stable interfaces, faster refine, clearer refusals, 2026-10-07
 
 - `refine` (and RefacTrail's `fix`) is faster on very large files: the
   names a statement may unbind are computed once per statement instead
