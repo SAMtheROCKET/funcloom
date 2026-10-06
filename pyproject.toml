@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "funcloom"
-version = "0.10.4a0"
+version = "0.10.5a0"
 description = "The Python functionizer: auto-generate verified functions and modular packages from scripts, snippets and Jupyter notebooks"
 readme = "README.md"
 requires-python = ">=3.12"

@@ -30,88 +30,110 @@ Built for developers, data scientists, data analysts and students; pair it
 with RefacTrail to check and refactor the result and FlowBlueprint to draw
 its architecture for managers and product owners.
 
-**Status: alpha.** The latest release on PyPI is 0.10.4a0 (experimental
-alpha; see [what's new](#whats-new-in-0104a0)). It has no runtime
-dependencies and does not need an LLM, account or network connection.
-Python 3.12 or newer is required. CI tests CPython 3.12-3.14 on Windows,
-Linux and macOS, and verifies the built packages on all three.
+**Status:** alpha, version 0.10.5a0 on PyPI. Free and open source (MIT).
+Works offline: no AI model, account or internet connection needed.
 
-## Quick start
+## Start in one minute
 
-```bash
-pip install funcloom
-```
+1. **Install** (needs Python 3.12 or newer;
+   [older Python? see below](#your-project-uses-an-older-python)):
 
-That is all: FuncLoom has no dependencies. Python 3.12 or newer is
-required.
+   ```bash
+   pip install funcloom
+   ```
 
-Then, in any project:
+2. **Point it at your script or notebook:**
 
-```bash
-funcloom                                     # the most useful commands
-funcloom check script.py                     # long functions, structure
-funcloom snippet code.py                     # draft a reusable function
-funcloom modularize notebook.ipynb --output my_package
-funcloom refine script.py --output script_refined.py
-```
+   ```bash
+   funcloom check my_script.py                                # what to improve
+   funcloom modularize my_notebook.ipynb --output my_package  # notebook to package
+   funcloom refine my_script.py --output my_script_refined.py # split long functions
+   ```
+
+3. **Use the result.** Your original file is never changed. `modularize`
+   writes a new folder: go into it and run `python main.py`. Anything
+   FuncLoom cannot do safely is skipped, with the reason and line number.
 
 ![FuncLoom turns sales_report.py into a package with modularize; the package's main.py prints the same result as the script](https://raw.githubusercontent.com/SAMtheROCKET/funcloom/main/docs/media/funcloom-modularize.gif)
 
-Your original files are never changed: results go to a new file or an
-empty folder, and anything that cannot be proven safe is refused with a
-reason and line number. If your system blocks the `funcloom` command, use
-`python -m funcloom` instead.
+Typing just `funcloom` shows the most useful commands. If your computer
+blocks the `funcloom` command, type `python -m funcloom` instead.
 
-**In VS Code**, install the [FuncLoom extension](https://marketplace.visualstudio.com/items?itemName=samtherocket.funcloom) from the
-Marketplace (search *FuncLoom* in the Extensions view) and run
-*FuncLoom: ...* from the Command Palette. It uses the Python interpreter selected in VS Code and
-offers to install FuncLoom there with one click.
+## In VS Code
 
-**On every commit**, add the hook to `.pre-commit-config.yaml`:
+1. Install **[FuncLoom](https://marketplace.visualstudio.com/items?itemName=samtherocket.funcloom)** from the
+   Extensions view (search *FuncLoom*).
+2. Open a Python file or notebook, press **Ctrl+Shift+P**
+   (**Cmd+Shift+P** on a Mac) and type **FuncLoom**.
+3. The first time, click **Install** when asked; the extension sets
+   FuncLoom up in your Python for you.
+
+Commands: **Check active file** (findings in the Problems panel),
+**Draft function from selection or cell**, **Modularize to new folder**
+and **Refine to new file**.
+
+## Check on every commit (optional)
+
+Add this to `.pre-commit-config.yaml`:
 
 ```yaml
 repos:
   - repo: https://github.com/SAMtheROCKET/funcloom
-    rev: v0.10.4a0
+    rev: v0.10.5a0
     hooks:
       - id: funcloom-check
 ```
 
-## What's new in 0.10.4a0
+## What's new in 0.10.5a0
 
-- **Faster `refine` on very large files:** a repeated scan was removed;
-  the output is identical on all 7,572 files checked.
-- **Clearer refusals:** a program nested too deeply for Python is refused
-  with READ001, and `from x import *` inside a `try`/`if` block with
-  MOD004 at its line, instead of a crash or a generic MOD007.
-- **Robustness:** `refine` ran on a 6,988-file corpus of real packages
-  without a crash; `modularize` planned 5,669 of those files and refused
-  the rest with located reasons.
-- **Stable interfaces:** [docs/INTERFACES.md](docs/INTERFACES.md) lists
-  the commands, exit codes, codes and API kept stable through the beta.
+- **VS Code extension on the Marketplace,** now with an icon: search
+  *FuncLoom* in the Extensions view.
+- **Older-Python projects:** a step-by-step
+  [guide](https://github.com/SAMtheROCKET/funcloom/blob/main/docs/OLDER_PYTHON.md), tested with code for Python 3.8, 3.9 and
+  3.10.
+- **A simpler README.** The engine is unchanged; 0.10.4a0's faster
+  `refine` and clearer refusals are in the [changelog](https://github.com/SAMtheROCKET/funcloom/blob/main/CHANGELOG.md).
 
-## Office machines and older Python
+## Your project uses an older Python?
 
-FuncLoom needs Python 3.12 or newer, but your project does not: the tool
-only reads your code, so it can run on its own Python next to a project
-that stays on 3.9, 3.10 or 3.11. Neither of these needs administrator
-rights; [uv](https://docs.astral.sh/uv/) downloads its own Python 3.12
-into your user folder:
+No problem. FuncLoom only **reads** your code, so it runs on its own
+Python 3.12 or newer while your project stays on Python 3.8, 3.9, 3.10 or
+3.11. Do this once:
 
-```bash
-uvx --python 3.12 funcloom check script.py                  # one-off run
-uv tool install --python 3.12 funcloom                      # or install once
-funcloom modularize notebook.ipynb --output my_package
-```
+1. **Make a separate Python for the tools** (no admin rights needed):
 
-`pipx install --python <path to a Python 3.12> funcloom` works the same
-way. If `pip` says `from versions: none`, your Python is older than 3.12
-or pip is pointed at a company mirror that does not carry the package
-(check with `python -m pip config list`, and ask IT to allow it).
+   ```bash
+   # Windows (Command Prompt)
+   py -3.12 -m venv %USERPROFILE%\py-tools
+   %USERPROFILE%\py-tools\Scripts\python -m pip install funcloom
 
-Step by step, with the VS Code settings and the limits: [using the tools on older-Python projects](https://github.com/SAMtheROCKET/funcloom/blob/main/docs/OLDER_PYTHON.md).
+   # macOS / Linux
+   python3.12 -m venv ~/py-tools
+   ~/py-tools/bin/python -m pip install funcloom
+   ```
 
-### From source (development)
+   No Python 3.12 on the machine? Run `pip install uv`, then
+   `uvx --python 3.12 funcloom check my_script.py`: uv downloads Python 3.12 for you.
+
+2. **Run FuncLoom with that Python:**
+
+   ```bash
+   %USERPROFILE%\py-tools\Scripts\python -m funcloom check my_script.py     # Windows
+   ~/py-tools/bin/python -m funcloom check my_script.py                       # macOS / Linux
+   ```
+
+3. **In VS Code**, open Settings, search for `funcloom.pythonPath` and paste
+   the path of that Python (for example
+   `C:\Users\YOU\py-tools\Scripts\python.exe`).
+
+Your project keeps using its own Python to run. More detail, limits and
+fixes for common errors: [the older-Python guide](https://github.com/SAMtheROCKET/funcloom/blob/main/docs/OLDER_PYTHON.md).
+
+If `pip install funcloom` says `from versions: none`, your Python is older
+than 3.12 (use the steps above) or your company's package mirror does not
+carry it yet (ask IT to allow it).
+
+## From source (for contributors)
 
 ```bash
 python -m venv .venv

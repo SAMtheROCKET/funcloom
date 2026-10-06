@@ -1,3 +1,17 @@
+# 0.10.5a0 - VS Code Marketplace and a simpler README, 2026-10-07
+
+- The VS Code extension is on the Marketplace (publisher samtherocket)
+  with an icon, homepage and issue links; `scripts/package_editor.py`
+  now writes the same VSIX layout as Microsoft's vsce, and CI packages
+  the extension on every push.
+- docs/OLDER_PYTHON.md: using FuncLoom on projects that stay on Python
+  3.8-3.11 (tested: output of `refine` and `modularize` runs unchanged on
+  3.8, 3.9 and 3.10).
+- The README starts with three steps (install, run, use the result), a
+  VS Code section and the older-Python steps.
+- The shared extension setup can also install FlowBlueprint.
+- No engine changes.
+
 # 0.10.4a0 - beta preparation: stable interfaces, faster refine, clearer refusals, 2026-10-07
 
 - `refine` (and RefacTrail's `fix`) is faster on very large files: the
