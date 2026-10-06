@@ -1,5 +1,11 @@
 # FuncLoom
 
+[![CI](https://github.com/SAMtheROCKET/funcloom/actions/workflows/ci.yml/badge.svg)](https://github.com/SAMtheROCKET/funcloom/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/funcloom?include_prereleases)](https://pypi.org/project/funcloom/)
+[![Python](https://img.shields.io/pypi/pyversions/funcloom)](https://pypi.org/project/funcloom/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![Website](https://img.shields.io/badge/website-funcloom-informational)](https://samtherocket.github.io/funcloom/)
+
 **The Python functionizer.** Turn Python snippets, scripts and Jupyter
 notebooks into reviewable functions and modular packages; every
 transformation is verified or refused with a reason and source location.
