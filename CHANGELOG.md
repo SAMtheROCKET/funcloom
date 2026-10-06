@@ -1,8 +1,9 @@
 # Unreleased
 
-- `refine` (and RefacTrail's `fix`) is up to 3-4 times faster on very
-  large files: the names a statement may unbind are computed once per
-  statement instead of once per candidate split. Output is unchanged on
+- `refine` (and RefacTrail's `fix`) is faster on very large files: the
+  names a statement may unbind are computed once per statement instead
+  of once per candidate split (2.6 times fewer seconds on the slowest
+  corpus file under the profiler). Output is unchanged on
   all 584 standard-library and 6,988 corpus files; the slowest corpus
   file now takes 13 s instead of over 20 s.
 - Robustness sweep: `refine` with splitting, docstrings and wrapping ran
