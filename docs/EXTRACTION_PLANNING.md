@@ -107,8 +107,11 @@ refused: they stay free names in the draft (see M2B_CALLS.md).
 Selected statements may call functions since 0.5.0a0, subject to PLAN008.
 Since 0.6.0a0 `+=`, item and attribute assignment, expression
 statements, unpacking and chained assignment are also accepted; see
-[M2B_STATEMENTS.md](M2B_STATEMENTS.md). Control flow and `del` are still
-refused (PLAN002). Whole-repo modularization is available through the
+[M2B_STATEMENTS.md](M2B_STATEMENTS.md). Since M2b.6 list, set and dict
+comprehensions are accepted too; their free reads are resolved like any
+other read (see [M2B_BINDINGS.md](M2B_BINDINGS.md#m2b6-comprehensions)).
+Control flow, `del`, generator expressions and lambdas are still refused
+(PLAN002). Whole-repo modularization is available through the
 separate `modularize` command.
 
 ## Refusal diagnostics
@@ -116,7 +119,7 @@ separate `modularize` command.
 | Code | Reason |
 | --- | --- |
 | PLAN001 | Empty/out-of-file selection, partial statement, nested scope, or semicolon group |
-| PLAN002 | Unsupported selected statement or expression: control flow, `del`, annotated assignment, nested unpacking, lambdas, comprehensions, `:=`, f-strings, frame-dependent names such as `locals()`, annotation moves, or multiline string literals |
+| PLAN002 | Unsupported selected statement or expression: control flow, `del`, annotated assignment, nested unpacking, lambdas, generator expressions, async comprehensions, `:=`, f-strings, frame-dependent names such as `locals()`, annotation moves, or multiline string literals |
 | PLAN003 | A name read by the region does not resolve as `direct` before it; the message gives its status |
 | PLAN004 | Proposed function name collides with a source identifier or builtin |
 | PLAN005 | Retired in 0.4.0a0: an unsupported prefix no longer refuses a plan by itself |

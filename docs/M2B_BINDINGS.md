@@ -67,8 +67,10 @@ from the restricted prefix; since M2b.3 it is the acceptance rule
 - Function, lambda, class and PEP 695 type-parameter bodies stay opaque.
   Their free reads are not resolved. Decorators, defaults, bases and eager
   annotations are evaluated in module scope and are analyzed.
-- Only the first read of each name is resolved. Comprehension reads after
-  the first iterable are not collected. Iteration variables are local.
+- Only the first read of each name is resolved. Since M2b.6 the free
+  reads of selected comprehensions (element, conditions and later
+  iterables, nested comprehensions included) are collected; iteration
+  variables are local and never collected.
 - Namespace writes are detected only by the spellings `globals`, `locals`,
   `vars`, `exec`, `eval`, `setattr` and `delattr`. Spelling can over-report
   shadowed names and miss aliases. `sys.modules`, builtins replacement,
@@ -98,10 +100,40 @@ trusted comparison on a script with imports, a helper function, a loop,
 a call and an unrelated conditional before the selection. See
 [EXTRACTION_PLANNING.md](EXTRACTION_PLANNING.md) for the updated subset.
 
+## M2b.6: comprehensions
+
+List, set and dict comprehensions are accepted in selected statements.
+They run immediately: at module level their free names read module
+globals at that moment, and inside the draft they read the function's
+parameters (or selection-local names), which hold the same values. The
+draft is therefore only accepted when every free read resolves as
+before: `direct`, `selection_local` or a free builtin/runner name.
+
+- Iteration targets are comprehension-local; they are never inputs or
+  outputs, even when a module variable has the same name
+  (`[x for x in values]` does not read module `x`).
+- The first iterable is evaluated in the enclosing scope, so
+  `[item for item in item]` reads the outer `item`.
+- Calls inside a comprehension are covered by the PLAN008 check for
+  module code that could observe delayed writes.
+- Still refused (PLAN002): generator expressions (they run lazily,
+  possibly after the function returns), lambdas (they run later and would
+  read the function's values instead of the module's), async
+  comprehensions and `:=`.
+
+Seven regressions (tests/test_plan_comprehensions.py) cover nested,
+filtered, multi-generator, tuple-target, set and dict comprehensions with
+trusted, test-authored comparisons of the original and the draft, plus
+the refusals above. The effect inventory still treats comprehension bodies
+as opaque scope boundaries. Snippet drafts rename a comprehension variable
+together with a module variable of the same name; behavior is unchanged,
+but the proposed name (for example a `_float` suffix) can then describe
+the module value rather than the loop item.
+
 ## Next boundary
 
 Remaining M2b work: consider accepting `ambiguous` reads; widen the
-selected statements themselves (calls, attributes, control flow);
-resolve free reads inside nested scopes; path-sensitive
+selected statements themselves (control flow); resolve free reads inside
+function and lambda bodies; path-sensitive
 exception and alias contracts; definition-time effects; a concrete-syntax
 edit representation; and more counterexamples before any M3 apply path.

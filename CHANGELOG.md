@@ -1,3 +1,13 @@
+# Unreleased
+
+- M2b.6: `plan` (and snippet drafts) accept list, set and dict
+  comprehensions in the selected region. Their free reads are resolved
+  like other reads; iteration variables are never inputs or outputs.
+  Generator expressions and lambdas stay refused with a clearer reason
+  (they run later than the drafted function), as do async comprehensions.
+  Seven regressions compare the original and the draft on trusted,
+  test-authored scripts.
+
 # 0.10.5a0 - VS Code Marketplace and a simpler README, 2026-10-07
 
 - The VS Code extension is on the Marketplace (publisher samtherocket)

@@ -172,7 +172,7 @@ class PlanningTests(unittest.TestCase):
 
     def test_scopes_walrus_fstrings_and_frame_calls_are_refused(self):
         for expression in (
-            "(lambda: 1)", "[item for item in range(2)]", "(value := 1)",
+            "(lambda: 1)", "(item for item in range(2))", "(value := 1)",
             "f'{1}'", "locals()", "eval('1')", "vars()",
         ):
             with self.subTest(expression=expression):

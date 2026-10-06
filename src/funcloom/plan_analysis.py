@@ -2,7 +2,9 @@
 
 import ast
 
-from funcloom.plan_bindings import DYNAMIC_NAMESPACE_NAMES_TUPLE
+from funcloom.plan_bindings import (
+    DYNAMIC_NAMESPACE_NAMES_TUPLE, list_scope_reads_list,
+)
 from funcloom.plan_models import (
     BindingFact, ExtractionPlan, ModuleBindings, append_issue_none,
 )
@@ -12,7 +14,15 @@ ALLOWED_EXPRESSIONS_TUPLE = (
     ast.Constant, ast.Name, ast.BinOp, ast.UnaryOp, ast.Call, ast.Attribute,
     ast.Subscript, ast.Slice, ast.Starred, ast.Compare, ast.BoolOp,
     ast.IfExp, ast.Tuple, ast.List, ast.Dict, ast.Set,
+    ast.ListComp, ast.SetComp, ast.DictComp,
 )
+DEFERRED_REASONS_DICT = {
+    ast.GeneratorExp: "a generator expression runs lazily, possibly after "
+                      "the drafted function returns, and could then see "
+                      "different values",
+    ast.Lambda: "a lambda runs later and would read the function's values "
+                "instead of the module's",
+}
 BINDING_KINDS_TUPLE = (
     "assignment", "augmented_assignment", "named_expression",
     "loop_target", "context_target", "import", "function_definition",
@@ -37,6 +47,12 @@ def find_expression_issue_str(expression_node: ast.expr) -> str | None:
         ):
             return (f"'{child_node.id}' depends on the calling frame or "
                     "namespace, which changes inside a function")
+        if isinstance(child_node, ast.comprehension) and (
+            child_node.is_async
+        ):
+            return "async comprehensions need a running event loop"
+        if type(child_node) in DEFERRED_REASONS_DICT:
+            return DEFERRED_REASONS_DICT[type(child_node)]
         if isinstance(child_node, ast.expr) and not isinstance(
             child_node, ALLOWED_EXPRESSIONS_TUPLE,
         ):
@@ -165,12 +181,10 @@ def read_occurrences_list(expression_node: ast.expr) -> list[ast.Name]:
         list[ast.Name]: Loaded names with original source locations.
     Warnings:
         This ordering is not a general execution model for arbitrary ASTs.
+        Comprehension iteration variables are local and never listed.
     """
-    return sorted(
-        (node for node in ast.walk(expression_node)
-         if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)),
-        key=lambda node: (node.lineno, node.col_offset),
-    )
+    return sorted(list_scope_reads_list(expression_node),
+                  key=lambda node: (node.lineno, node.col_offset))
 
 
 def make_binding_fact(

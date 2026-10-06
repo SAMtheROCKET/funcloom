@@ -415,6 +415,68 @@ def collect_statement_sites_list(
     return located_list
 
 
+def list_comprehension_reads_list(
+    node: ast.AST, bound_set: frozenset[str] = frozenset(),
+) -> list[ast.Name]:
+    """List the names a comprehension reads from its enclosing scope.
+
+    Args:
+        node (ast.AST): List, set or dict comprehension or generator.
+        bound_set (frozenset[str]): Names local to enclosing comprehensions.
+    Returns:
+        list[ast.Name]: Free reads, nested comprehensions included.
+    Warnings:
+        Every iteration target is local to the comprehension, so its name
+        is never an outer read; only the first iterable is evaluated in
+        the enclosing scope.
+    """
+    local_set = bound_set | {
+        name_node.id for generator_node in node.generators
+        for name_node in find_target_names_list(generator_node.target)
+    }
+    reads_list = list_scope_reads_list(node.generators[0].iter, bound_set)
+    inner_list = [getattr(node, field_str) for field_str in
+                  ("elt", "key", "value") if hasattr(node, field_str)]
+    for index_int, generator_node in enumerate(node.generators):
+        inner_list.extend(generator_node.ifs)
+        if index_int:
+            inner_list.append(generator_node.iter)
+        if not isinstance(generator_node.target, ast.Name):
+            inner_list.append(generator_node.target)
+    for part_node in inner_list:
+        reads_list.extend(list_scope_reads_list(part_node, local_set))
+    return reads_list
+
+
+def list_scope_reads_list(
+    expression_node: ast.AST, bound_set: frozenset[str] = frozenset(),
+) -> list[ast.Name]:
+    """List loaded names an expression reads from its enclosing scope.
+
+    Args:
+        expression_node (ast.AST): Expression to scan.
+        bound_set (frozenset[str]): Names local to enclosing comprehensions.
+    Returns:
+        list[ast.Name]: Loaded names, comprehension locals excluded.
+    Warnings:
+        Lambda bodies are scanned like plain expressions; callers refuse
+        lambdas before relying on this list.
+    """
+    reads_list: list[ast.Name] = []
+    pending_list: list[ast.AST] = [expression_node]
+    while pending_list:
+        node = pending_list.pop()
+        if isinstance(node, COMPREHENSIONS_TUPLE):
+            reads_list.extend(list_comprehension_reads_list(node, bound_set))
+            continue
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load) and (
+            node.id not in bound_set
+        ):
+            reads_list.append(node)
+        pending_list.extend(ast.iter_child_nodes(node))
+    return reads_list
+
+
 def list_selection_reads_list(
     statements_list: list[ast.stmt],
 ) -> list[tuple[ast.Name, tuple[int, ...]]]:
@@ -426,6 +488,8 @@ def list_selection_reads_list(
         list: Name reads in source order with enclosing loop ids.
     Warnings:
         Deletions and augmented targets count as reads of an existing name.
+        Comprehension bodies contribute their free reads, never their
+        own iteration variables.
     """
     reads_list: list[tuple[ast.Name, tuple[int, ...]]] = []
     for statement_node in statements_list:
@@ -433,6 +497,11 @@ def list_selection_reads_list(
         while pending_list:
             item_tuple = pending_list.pop()
             node = item_tuple[0]
+            if isinstance(node, COMPREHENSIONS_TUPLE):
+                reads_list.extend(
+                    (name_node, item_tuple[2]) for name_node in
+                    list_comprehension_reads_list(node))
+                continue
             if isinstance(node, ast.AugAssign) and isinstance(
                 node.target, ast.Name,
             ):
