@@ -54,10 +54,7 @@ funcloom modularize notebook.ipynb --output my_package
 funcloom refine script.py --output script_refined.py
 ```
 
-<!-- GIF placeholder: docs/media/funcloom-modularize.gif
-     Terminal, about 25 s: `funcloom modularize analysis.ipynb --output
-     analysis_pkg`, the generated tree, then `python analysis_pkg/main.py`
-     giving the notebook's result. See docs/MEDIA.md. -->
+![FuncLoom turns sales_report.py into a package with modularize; the package's main.py prints the same result as the script](https://raw.githubusercontent.com/SAMtheROCKET/funcloom/main/docs/media/funcloom-modularize.gif)
 
 Your original files are never changed: results go to a new file or an
 empty folder, and anything that cannot be proven safe is refused with a
@@ -172,10 +169,7 @@ without `--output` only plans; `--show-files` includes the generated text.
 
 ## Generated package and limits
 
-<!-- GIF placeholder: docs/media/funcloom-refine.gif
-     VS Code diff, about 15 s: a 120-line function before, and the
-     refined copy with verified helper functions after. See docs/MEDIA.md.
--->
+![FuncLoom refine splits long functions into helpers; the refined copy prints exactly the same output](https://raw.githubusercontent.com/SAMtheROCKET/funcloom/main/docs/media/funcloom-refine.gif)
 
 A typical package has `config.py`, `functions.py`/`models.py`, `steps.py`,
 `pipeline.py` and `main.py`. Its initial imports are retained once, in source

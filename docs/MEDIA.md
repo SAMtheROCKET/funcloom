@@ -2,6 +2,8 @@
 
 Planned recordings, where they go in README.md, and how to make them.
 
+**Status:** `funcloom-modularize.gif` and `funcloom-refine.gif` are in place (the refine GIF shows the diff in a terminal instead of VS Code). They were rendered from real command output in a scripted terminal, so re-make them after a release if the output changes. Optional: `funcloom-snippet.gif` (needs VS Code).
+
 | File (docs/media/) | Where | What to show | Length | How |
 | --- | --- | --- | --- | --- |
 | `funcloom-modularize.gif` | Quick start | `modularize` turns examples/modular_sales_report.py into a package; list the files; `python main.py` prints the same report | ~25 s | VHS: `funcloom-modularize.tape` |
