@@ -16,6 +16,9 @@
 - docs/INTERFACES.md lists the commands, options, exit codes, codes,
   output formats, Python API and safety guarantees kept stable through
   the beta.
+
+# 0.10.3a0 - strict-profile migration, local candidate, 2026-10-02
+
 - `funcloom` without arguments shows a short quick start.
 - VS Code: the extension uses the interpreter selected in the Python
   extension when `funcloom.pythonPath` is empty (the new default), and
@@ -23,9 +26,6 @@
 - pre-commit hook `funcloom-check`; README quick start.
 - Package metadata and README describe FuncLoom as the Python
   functionizer, with keywords and family links to RefacTrail.
-
-# 0.10.3a0 - strict-profile migration, local candidate, 2026-10-02
-
 - FuncLoom's own source now passes RefacTrail's strict profile: 222
   module functions renamed to verb-first names with dtype suffixes, about
   220 generic loop/comprehension names (`item`, `value`, `info`) replaced
