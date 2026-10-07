@@ -124,6 +124,29 @@ since M2b.10 `def`, `class`, lambdas and generator expressions. See
 still refused (PLAN002). Whole-repo modularization is available through the
 separate `modularize` command.
 
+## Applying a plan to a new file (M3, first increment)
+
+`funcloom plan FILE --start-line N --end-line M --name NAME --apply-to
+NEW.py` (Python: `apply_extraction_result`) plans the region and, for a
+candidate, writes a new file: the original text before the region, the
+drafted function, its call and the original text after the region. The
+source is never changed. Before anything is written:
+
+- the source is read again and must have the planned SHA-256;
+- the new text must compile;
+- every statement before and after the region must keep its syntax tree,
+  and the inserted function and call must equal the reviewed previews;
+- the output must not exist yet (it is created exclusively) and must not
+  be the source; the source's line endings are kept.
+
+Exit status is 0 when the file was written and 1 otherwise (the plan was
+refused, or a check above failed, with the reason printed). Behaviour is
+not proven: the plan's assumptions still apply, so review and test the
+new file. Robustness: over 40,007 regions of the Python 3.12 standard
+library and 129 third-party packages, no region crashed or failed the
+analysis, and every one of the 11,226 candidates composed into a module
+that passed all the checks above.
+
 ## Refusal diagnostics
 
 | Code | Reason |

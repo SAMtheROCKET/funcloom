@@ -11,6 +11,7 @@ from funcloom.api import check_project_report, scan_project_report
 from funcloom.config import (
     RuleProfile, apply_line_length_profile, load_profile
 )
+from funcloom.plan_apply import apply_extraction_result
 from funcloom.planning import plan_extraction_report
 from funcloom.plan_reporting import render_plan_str
 from funcloom.reporting import render_report_str
@@ -92,6 +93,10 @@ def add_source_parser_none(
         command_parser.add_argument("--start-line", type=int, required=True)
         command_parser.add_argument("--end-line", type=int, required=True)
         command_parser.add_argument("--name", required=True)
+        command_parser.add_argument(
+            "--apply-to", type=Path,
+            help="Write the rewritten module to this new file (the "
+                 "original is never changed)")
     else:
         command_parser.add_argument(
             "--fail-on", choices=["error", "warning"], default="error",
@@ -238,6 +243,8 @@ def run_plan_int(arguments: argparse.Namespace) -> int:
         arguments.path, arguments.start_line, arguments.end_line,
         arguments.name, load_command_profile(arguments),
     )
+    if arguments.apply_to is not None:
+        return run_apply_int(arguments)
     rendered_str = render_plan_str(plan_report, arguments.format)
     if arguments.output is None:
         print(rendered_str, end="")
@@ -245,3 +252,29 @@ def run_plan_int(arguments: argparse.Namespace) -> int:
         write_report_none(arguments.output, rendered_str, arguments.format)
         print(f"Plan created: {arguments.output}")
     return int(plan_report.status != "candidate_for_review")
+
+
+def run_apply_int(arguments: argparse.Namespace) -> int:
+    """Apply a candidate plan to a new file (plan --apply-to).
+
+    Args:
+        arguments (argparse.Namespace): Parsed plan command options.
+    Returns:
+        int: Zero when the new file was written, one otherwise.
+    Warnings:
+        The original file is never changed; review and test the output.
+    """
+    result = apply_extraction_result(
+        arguments.path, arguments.start_line, arguments.end_line,
+        arguments.name, arguments.apply_to, load_command_profile(arguments))
+    print(render_plan_str(result.plan, arguments.format), end="")
+    if result.status == "written":
+        print(f"Applied: wrote {result.output}; the original is unchanged."
+              " Review and test the new file before using it.")
+        return 0
+    refusals_list = [f"the plan was refused ({item.code}: {item.message})"
+                     for item in result.plan.diagnostics[:1]]
+    for message_str in result.messages or refusals_list or [
+            "the plan was refused."]:
+        print(f"Not applied: {message_str}")
+    return 1

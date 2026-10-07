@@ -169,6 +169,22 @@ async function run() {
         assert.ok(fs.existsSync(destination));
         assert.equal(fs.readFileSync(fixture, 'utf8'), fixtureText);
     });
+    await step('extract selected lines to a new file, original untouched', async () => {
+        const sales = path.join(root, 'sales.py');
+        const salesText = 'values = [3, 1, 4]\ntotal = 0\nfor value in values:\n'
+            + '    total += value\nprint(total)\n';
+        fs.writeFileSync(sales, salesText);
+        const editor = await openFile(sales);
+        editor.selection = new vscode.Selection(1, 0, 4, 0);
+        const destination = path.join(root, 'sales.extracted.py');
+        const errors = await runCommand('extract', {
+            showInputBox: async () => 'sum_values_int',
+            showSaveDialog: async () => vscode.Uri.file(destination),
+        });
+        assert.deepEqual(errors, []);
+        assert.ok(fs.readFileSync(destination, 'utf8').includes('def sum_values_int('));
+        assert.equal(fs.readFileSync(sales, 'utf8'), salesText);
+    });
     await step('cancelled save dialog writes nothing', async () => {
         await openFile(fixture);
         const before = fs.readdirSync(root).length;

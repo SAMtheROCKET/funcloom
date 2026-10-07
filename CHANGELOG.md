@@ -30,6 +30,22 @@
   such a name is local to the draft and code outside the region rebinds
   it, the region is refused with the new PLAN010. The plan notes that
   moved definitions get nested qualified names.
+- Definitions whose bodies hold multi-line strings (docstrings) are
+  refused with PLAN002 instead of failing the structural check.
+- Regions holding the module docstring or a `__future__` import are
+  refused with PLAN002: both must stay at the top of the module.
+- M3, first increment: `funcloom plan ... --apply-to NEW.py` (Python:
+  `apply_extraction_result`, experimental) writes the module with the
+  region replaced by the function and its call to a new file, after
+  checking the source hash again, that the new file compiles, that
+  everything outside the region keeps its syntax tree and that the
+  inserted code equals the reviewed previews. The source is never
+  changed and an existing file is never overwritten. A refused plan
+  prints its first reason. VS Code: **Extract selected lines to a
+  function (new file)** runs it on the editor selection.
+- Robustness: `plan` ran on 40,007 regions of the standard library and
+  129 packages without a crash or an analysis failure; all 11,226
+  candidates compile and pass the apply checks.
 
 # 0.10.5a0 - VS Code Marketplace and a simpler README, 2026-10-07
 

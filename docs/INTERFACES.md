@@ -20,6 +20,7 @@ was handled unsafely) is a safety fix, not an interface change.
 | `funcloom refine PATH --output DIR` | yes | Split long functions, wrap long lines and optionally add docstrings, in a copy |
 | `funcloom snippet` | yes | Draft one function from a code snippet, with questions for unclear names |
 | `funcloom plan PATH --start-line --end-line --name` | yes | Plan extracting a selected region; never changes the source |
+| `funcloom plan ... --apply-to NEW.py` | experimental | Write the rewritten module (region replaced by the function and its call) to a new file; the source is never changed |
 | `funcloom doctor` | yes | Show the local runtime |
 
 Stable options keep their names and meaning, including `--output`,
@@ -57,7 +58,8 @@ are not reused. Retired codes (such as `PLAN005`) stay documented.
 These names exported by `funcloom` are stable: `scan_project_report`,
 `check_project_report`, `plan_extraction_report`, `plan_snippet_report`,
 `plan_snippet_file_report`, `refine_source_text`, `load_profile`,
-`RuleProfile`, `RefinedSource` and `SnippetContext`. Other modules are
+`RuleProfile`, `RefinedSource` and `SnippetContext`.
+`apply_extraction_result` and `ApplyResult` are experimental. Other modules are
 internal and may move. RefacTrail and FlowBlueprint use only this API.
 
 ## Safety guarantees

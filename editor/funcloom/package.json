@@ -61,6 +61,10 @@
       {
         "command": "funcloom.refine",
         "title": "FuncLoom: Refine to new file"
+      },
+      {
+        "command": "funcloom.extract",
+        "title": "FuncLoom: Extract selected lines to a function (new file)"
       }
     ],
     "configuration": {

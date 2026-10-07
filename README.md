@@ -69,8 +69,9 @@ blocks the `funcloom` command, type `python -m funcloom` instead.
    FuncLoom up in your Python for you.
 
 Commands: **Check active file** (findings in the Problems panel),
-**Draft function from selection or cell**, **Modularize to new folder**
-and **Refine to new file**.
+**Draft function from selection or cell**, **Modularize to new folder**,
+**Refine to new file** and **Extract selected lines to a function (new
+file)**.
 
 ## Check on every commit (optional)
 
@@ -147,6 +148,7 @@ python -m venv .venv
 | --- | --- | --- |
 | `snippet` | Python text or one notebook cell | Function/caller drafts with optional context, naming proposals, type evidence and questions |
 | `plan` | An explicit module-level line selection | Extraction contract, draft function/caller, source hashes, effects and refusal reasons |
+| `plan ... --apply-to NEW.py` | The same selection (experimental) | A new file with the region replaced by the function and its call, checked before it is written; the original is never changed |
 | `modularize` | Script, stdin, notebook or project folder | New modules, step functions, a `Pipeline` class and entry scripts |
 | `refine` | Python file or project folder | New copies with supported long functions/blocks split, lines wrapped and optional docstring skeletons |
 | `scan` / `check` | Python file or project folder | Inventory and configured line, size, annotation, documentation and naming findings |

@@ -57,3 +57,11 @@ test('a report that wrote nothing is described, a written one is not', () => {
     assert.equal(describeRefusal('snippet', refused), null);
     assert.equal(describeRefusal('modularize', 'not json'), null);
 });
+
+test('selected lines exclude a final line selected only at column 0', () => {
+    const { selectedLines } = require('../extension');
+    const at = (line, character) => ({ line, character });
+    assert.deepEqual(selectedLines({ start: at(5, 0), end: at(9, 0) }), { start: 6, end: 9 });
+    assert.deepEqual(selectedLines({ start: at(5, 2), end: at(8, 4) }), { start: 6, end: 9 });
+    assert.deepEqual(selectedLines({ start: at(5, 0), end: at(5, 0) }), { start: 6, end: 6 });
+});

@@ -58,6 +58,12 @@ def analyze_region_none(
         Constant conditions are not folded; a loop may always run zero
         times as far as this analysis knows.
     """
+    if ast.get_docstring(module_node) is not None and (
+            module_node.body[0] in statements_list):
+        append_issue_none(plan_report, "PLAN002", module_node.body[0].lineno,
+                          "The module docstring must stay first; it sets "
+                          "__doc__ and precedes __future__ imports.")
+        return
     flow_info = RegionFlow(bindings_info, plan_report)
     definite_set = walk_block_set(statements_list, set(), flow_info)
     if not plan_report.diagnostics:
@@ -405,6 +411,12 @@ def walk_simple_set(statement_node: ast.stmt, definite_set: set[str],
     Warnings:
         Other statement forms are refused with PLAN002.
     """
+    if isinstance(statement_node, ast.ImportFrom) and (
+            statement_node.module == "__future__"):
+        append_issue_none(flow_info.report, "PLAN002", statement_node.lineno,
+                          "A __future__ import must stay at the top of "
+                          "the module.")
+        return definite_set
     parts_tuple = split_statement_parts_tuple(statement_node)
     if parts_tuple is None:
         append_issue_none(flow_info.report, "PLAN002", statement_node.lineno,
@@ -655,6 +667,14 @@ def walk_definition_set(definition_node: ast.stmt, definite_set: set[str],
                           definition_node.lineno, (
                               "Type parameters, global and nonlocal inside "
                               "a definition need broader scope analysis."))
+        return definite_set
+    if any(isinstance(node, ast.Constant)
+           and isinstance(node.value, (str, bytes))
+           and node.end_lineno != node.lineno
+           for node in ast.walk(definition_node)):
+        append_issue_none(flow_info.report, "PLAN002", definition_node.lineno,
+                          "Unsupported value: multiline string literals "
+                          "need token-aware relocation.")
         return definite_set
     nodes_list = list_definition_reads_list(definition_node)
     if not all(check_expression_bool(node, flow_info) for node in nodes_list):

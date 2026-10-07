@@ -23,6 +23,9 @@ The interpreter is the one selected in VS Code's Python extension (or
   TOML file.
 - **Modularize to new folder**: turns a script or notebook into a package.
 - **Refine to new file**: splits long functions and wraps long lines in a copy.
+- **Extract selected lines to a function (new file)**: select lines, type a
+  function name and pick a new file; FuncLoom writes a copy where those
+  lines are a function and its call, or tells you why it refused.
 
 Your original files are never changed; results go to a new file or folder,
 and anything that cannot be proven safe is refused with a reason. Save
