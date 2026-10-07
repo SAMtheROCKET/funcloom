@@ -1,5 +1,13 @@
 # Unreleased
 
+- Generated docstrings (`refine --document`, and RefacTrail's `fix`) now
+  describe what the code shows instead of placeholders: the summary adds
+  up to three visible operations ("It opens path, reads CSV rows and
+  loops over reader."), each parameter its first visible use ("Passed to
+  open().", "Looped over."), and the return entry the returned
+  expression with its type when the body builds it from one literal type
+  ("list: rows."). New module `funcloom.doc_facts`.
+
 - M2b.6: `plan` (and snippet drafts) accept list, set and dict
   comprehensions in the selected region. Their free reads are resolved
   like other reads; iteration variables are never inputs or outputs.
