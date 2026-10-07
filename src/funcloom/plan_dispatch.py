@@ -17,6 +17,10 @@ IMMEDIATE_SCOPES_TUPLE = (ast.ClassDef, ast.ListComp, ast.SetComp,
 DISPATCH_NODES_TUPLE = (
     ast.Call, ast.Attribute, ast.Subscript, ast.BinOp, ast.UnaryOp,
     ast.Compare, ast.BoolOp, ast.IfExp,
+    # Truth tests, iteration, in-place operators, unpacking, context
+    # managers and pattern matching can also call user-defined methods.
+    ast.If, ast.While, ast.For, ast.AugAssign, ast.Starred, ast.With,
+    ast.Try, ast.TryStar, ast.Match, ast.comprehension,
 )
 CAPTURE_NODES_TUPLE = (ast.ExceptHandler, ast.MatchAs, ast.MatchStar)
 
@@ -229,11 +233,14 @@ def dispatch_lines_list(statements_list: list[ast.stmt]) -> list[int]:
     Returns:
         list[int]: Statement indexes containing calls or dispatch syntax.
     Warnings:
-        Operators and attribute access can call user-defined methods.
+        Operators, attribute access, truth tests, iteration, unpacking,
+        context managers and pattern matching can call user methods.
     """
     return [index_int for index_int, statement_node in
             enumerate(statements_list)
             if any(isinstance(node, DISPATCH_NODES_TUPLE)
+                   or isinstance(node, (ast.Tuple, ast.List))
+                   and isinstance(node.ctx, ast.Store)
                    for node in ast.walk(statement_node))]
 
 

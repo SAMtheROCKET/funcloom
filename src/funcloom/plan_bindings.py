@@ -459,13 +459,22 @@ def list_scope_reads_list(
     Returns:
         list[ast.Name]: Loaded names, comprehension locals excluded.
     Warnings:
-        Lambda bodies are scanned like plain expressions; callers refuse
-        lambdas before relying on this list.
+        Lambda bodies and generator-expression bodies run later; only
+        lambda defaults and a generator's first iterable are read here.
+        Their deferred reads are checked separately (plan_control).
     """
     reads_list: list[ast.Name] = []
     pending_list: list[ast.AST] = [expression_node]
     while pending_list:
         node = pending_list.pop()
+        if isinstance(node, ast.Lambda):
+            pending_list.extend(
+                [*node.args.defaults,
+                 *(item for item in node.args.kw_defaults if item)])
+            continue
+        if isinstance(node, ast.GeneratorExp):
+            pending_list.append(node.generators[0].iter)
+            continue
         if isinstance(node, COMPREHENSIONS_TUPLE):
             reads_list.extend(list_comprehension_reads_list(node, bound_set))
             continue
@@ -497,7 +506,8 @@ def list_selection_reads_list(
         while pending_list:
             item_tuple = pending_list.pop()
             node = item_tuple[0]
-            if isinstance(node, COMPREHENSIONS_TUPLE):
+            if isinstance(node, COMPREHENSIONS_TUPLE) and not isinstance(
+                    node, ast.GeneratorExp):
                 reads_list.extend(
                     (name_node, item_tuple[2]) for name_node in
                     list_comprehension_reads_list(node))
@@ -512,6 +522,21 @@ def list_selection_reads_list(
                 reads_list.append((node, item_tuple[2]))
             pending_list.extend(
                 reversed(select_module_children_list(item_tuple, True)))
+    return keep_first_reads_list(reads_list)
+
+
+def keep_first_reads_list(
+    reads_list: list[tuple[ast.Name, tuple[int, ...]]],
+) -> list[tuple[ast.Name, tuple[int, ...]]]:
+    """Keep the first read of each name in source order.
+
+    Args:
+        reads_list (list): Name reads with enclosing loop ids.
+    Returns:
+        list: One read per name, the earliest.
+    Warnings:
+        Positions approximate evaluation order.
+    """
     reads_list.sort(key=lambda pair: (pair[0].lineno, pair[0].col_offset))
     first_reads_dict: dict[str, tuple[ast.Name, tuple[int, ...]]] = {}
     for pair_tuple in reads_list:

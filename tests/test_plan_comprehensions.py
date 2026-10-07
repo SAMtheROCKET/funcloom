@@ -106,11 +106,17 @@ class ComprehensionPlanTests(unittest.TestCase):
                     for item in report.name_resolutions}
         self.assertEqual(resolved["limit"], "possibly_unbound")
 
-    def test_deferred_and_async_scopes_stay_refused(self):
+    def test_generators_and_lambdas_are_candidates_since_m2b10(self):
+        for expression in ("(v for v in values)", "sum(v for v in values)",
+                           "[lambda: v for v in values]"):
+            with self.subTest(expression=expression):
+                report = self.plan(f"values = [1]\nresult = {expression}\n",
+                                   2, 2)
+                self.assertEqual(report.status, "candidate_for_review",
+                                 self.codes(report))
+
+    def test_walrus_stays_refused(self):
         for expression, reason in (
-            ("(v for v in values)", "lazily"),
-            ("sum(v for v in values)", "lazily"),
-            ("[lambda: v for v in values]", "lambda"),
             ("[(w := v) for v in values]", "NamedExpr"),
         ):
             with self.subTest(expression=expression):

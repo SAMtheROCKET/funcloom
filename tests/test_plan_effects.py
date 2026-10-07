@@ -96,7 +96,6 @@ class PlanEffectTests(unittest.TestCase):
             report = self.plan(f"result = {expression}\n", 1, 1)
             self.assertIn("scope_boundary", [f.kind for f in report.effects])
             self.assertNotIn("call", [f.kind for f in report.effects])
-            self.assertEqual(report.status, "refused")
 
     def test_control_flow_is_syntax_evidence_not_reachability(self):
         report = self.plan("if False:\n    value = danger()\n", 1, 2)

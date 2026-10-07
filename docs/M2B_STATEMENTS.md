@@ -80,6 +80,52 @@ trusted, test-authored scripts (accumulating loops, both outcomes of a
 branch, a `while` loop with `break` and `continue`, nested loops with a
 comprehension and `for`/`else`) and check the refusals.
 
+## M2b.9: try, with, match, raise and assert
+
+- `try`/`except`/`else`/`finally`: a handler starts from the names
+  definite before the `try` (the body may stop anywhere). After the
+  statement, a name is definite when the normal path (body and `else`)
+  and every handler set it, or when `finally` sets it. Python deletes an
+  `except ... as name` target when the clause ends, so it is never
+  returned; if that name already has a value, the region is refused
+  (PLAN009) because the clause could delete it from the module.
+  `except*` stays refused.
+- `with`: the `as` targets are definite afterwards, and so are names the
+  body sets on every path. The plan states the one assumption this needs:
+  a context manager that suppresses an exception part-way through would
+  make the draft raise `UnboundLocalError` for names not yet set, where
+  the original leaves them unset.
+- `match`: captures are set inside their case; after the statement a name
+  is definite when every case sets it and the last case always matches
+  (`case _` or a bare capture). Pattern values, classes and keys are
+  reads.
+- `raise` and `assert` only read.
+
+Iteration, truth tests, in-place operators, unpacking, context managers
+and pattern matching can call user methods, so PLAN008 now treats them
+like calls. Eight regressions (tests/test_plan_blocks.py) compare the
+original and the draft on both paths of each construct.
+
+## M2b.10: definitions, lambdas and generator expressions
+
+`def`, `async def`, `class`, lambdas and generator expressions may appear
+in a region. Their decorators, defaults, annotations and bases are read
+when the region runs; their bodies run later. Inside the draft, a body
+that reads a name local to the draft (an input or anything the region
+assigns) keeps that variable as a closure, while the original reads the
+module name when it runs. Python's own scope tables (`symtable`) give the
+names each body reads; the two versions agree unless code outside the
+region rebinds such a name (an assignment, import, definition or `del`
+after the region, a `global` declaration in any function, a wildcard
+import after the region, or a namespace call), which is refused with
+PLAN010. `global`/`nonlocal` and type parameters inside a moved
+definition stay refused (PLAN002). The plan notes that moved functions
+and classes get nested qualified names (`draft.<locals>.helper`), which
+shows in reprs and stops pickling them by reference. Seven regressions
+(tests/test_plan_definitions.py) cover helpers called after the region,
+recursion, lambdas with generators, a class with a method, and the
+refusals.
+
 ## Snippets
 
 The snippet workflow handles the same forms. Mutated or unpacked values

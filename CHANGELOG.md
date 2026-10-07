@@ -19,6 +19,17 @@
   when nothing else in the file reads it (stated in the plan), and
   otherwise refused with the new PLAN009. `try`, `with`, `match` and `del`
   stay refused.
+- M2b.9: `try`/`except`/`else`/`finally`, `with`, `match`, `raise` and
+  `assert` in planned regions, with the same definite-assignment rules
+  (an `except ... as` name that already has a value is refused). PLAN008
+  now treats iteration, truth tests, in-place operators, unpacking,
+  context managers and pattern matching as code that can run user
+  methods.
+- M2b.10: `def`, `class`, lambdas and generator expressions in planned
+  regions. Python's scope tables give the names their bodies read; when
+  such a name is local to the draft and code outside the region rebinds
+  it, the region is refused with the new PLAN010. The plan notes that
+  moved definitions get nested qualified names.
 
 # 0.10.5a0 - VS Code Marketplace and a simpler README, 2026-10-07
 

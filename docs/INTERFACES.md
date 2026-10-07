@@ -39,7 +39,7 @@ Stable options keep their names and meaning, including `--output`,
 
 Rule codes (`READ001`, `PARSE001`, `FMT001`, `SIZE001`-`SIZE004`,
 `TYPE001`, `TYPE002`, `DOC001`, `DOC002`, `NAME001`, see
-[RULES.md](RULES.md)) and refusal codes (`PLAN001`-`PLAN009` in
+[RULES.md](RULES.md)) and refusal codes (`PLAN001`-`PLAN010` in
 [EXTRACTION_PLANNING.md](EXTRACTION_PLANNING.md), `SNIP` codes in
 [SNIPPET_WORKFLOW.md](SNIPPET_WORKFLOW.md), `MOD001`-`MOD010` in
 [MODULARIZE.md](MODULARIZE.md)) keep their meaning once released and

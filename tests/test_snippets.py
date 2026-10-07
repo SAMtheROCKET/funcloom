@@ -122,7 +122,7 @@ class SnippetTests(unittest.TestCase):
 
     def test_context_cannot_override_unsupported_mutation_or_calls(self):
         for source in ("amount=2\ndel amount\n",
-                       "amount=2\nresult=(lambda: amount)()\n"):
+                       "amount=2\nresult=[(w := amount)]\n"):
             report = plan_snippet_report(
                 source, SnippetContext(project_context="This is safe."),
             )

@@ -15,15 +15,10 @@ ALLOWED_EXPRESSIONS_TUPLE = (
     ast.Constant, ast.Name, ast.BinOp, ast.UnaryOp, ast.Call, ast.Attribute,
     ast.Subscript, ast.Slice, ast.Starred, ast.Compare, ast.BoolOp,
     ast.IfExp, ast.Tuple, ast.List, ast.Dict, ast.Set,
-    ast.ListComp, ast.SetComp, ast.DictComp,
+    ast.ListComp, ast.SetComp, ast.DictComp, ast.GeneratorExp, ast.Lambda,
 )
-DEFERRED_REASONS_DICT = {
-    ast.GeneratorExp: "a generator expression runs lazily, possibly after "
-                      "the drafted function returns, and could then see "
-                      "different values",
-    ast.Lambda: "a lambda runs later and would read the function's values "
-                "instead of the module's",
-}
+# Deferred scopes are accepted; plan_control checks the names they read.
+DEFERRED_REASONS_DICT: dict = {}
 BINDING_KINDS_TUPLE = (
     "assignment", "augmented_assignment", "named_expression",
     "loop_target", "context_target", "import", "function_definition",

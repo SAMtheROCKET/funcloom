@@ -108,10 +108,11 @@ class PrefixTests(unittest.TestCase):
         self.assertEqual(report.diagnostics[-1].code, "PLAN003")
         self.assertIn("ambiguous", report.diagnostics[-1].message)
 
-    def test_selection_still_refuses_nested_scopes(self):
-        source = "import math\nbase = 2\nresult = (lambda: base)()\n"
+    def test_lambda_reading_a_name_rebound_later_is_refused(self):
+        source = ("import math\nbase = 2\n"
+                  "result = (lambda: base)() + base\nbase = 3\n")
         report = self.plan(source, 3, 3)
-        self.assertIn("PLAN002", [item.code for item in report.diagnostics])
+        self.assertIn("PLAN010", [item.code for item in report.diagnostics])
 
     def test_annotation_evidence_only_from_top_level_declarations(self):
         source = ("base: float = 2\nif flag:\n    other: int = 1\n"

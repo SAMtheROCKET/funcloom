@@ -117,9 +117,8 @@ class ControlFlowPlanTests(unittest.TestCase):
         report = self.plan(source, 4, 8)
         self.assertIn("PLAN008", self.codes(report))
 
-    def test_try_with_match_and_del_stay_refused(self):
-        for body in ("try:\n    x = 1\nexcept ValueError:\n    x = 2\n",
-                     "match 1:\n    case _:\n        x = 1\n",
+    def test_except_star_and_del_stay_refused(self):
+        for body in ("try:\n    x = 1\nexcept* ValueError:\n    x = 2\n",
                      "if True:\n    del flag\n"):
             with self.subTest(body=body):
                 source = "flag = True\n" + body

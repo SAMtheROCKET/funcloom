@@ -139,7 +139,7 @@ def prepare_candidate_none(
             return
         bindings_info = resolve_prefix_bindings_info(module_node, plan_report)
         analyze_region_none(module_node, statements_list, bindings_info,
-                            plan_report)
+                            plan_report, source_str)
         if not plan_report.diagnostics:
             check_dispatch_none(module_node, statements_list, plan_report)
         if not plan_report.diagnostics:
