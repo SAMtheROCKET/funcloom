@@ -1,5 +1,10 @@
 # Unreleased
 
+- `refine` and `modularize` add docstrings by default now that they
+  describe the code; `--no-document` turns this off (`--document` is
+  still accepted). The VS Code *Refine to new file* command therefore
+  documents functions too.
+
 - `modularize`: a script with no comment headings is no longer one big
   `run_step_1`. It is split at its blank-line paragraphs (paragraphs
   under four lines join the next one) and every split is still checked

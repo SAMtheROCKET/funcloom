@@ -16,12 +16,12 @@ copied Python file.
 
 ```powershell
 funcloom refine module.py --output module_refined.py            # one file
-funcloom refine my_repo --output my_repo_refined --document      # whole repo
+funcloom refine my_repo --output my_repo_refined                 # whole repo
 ```
 
 The input is never changed and the output must be new. Options:
-`--keep-long-functions` (no splitting), `--document` (add missing
-docstrings), `--trust-with-blocks` (see below), `--line-length N`, `--skip-data` for folders, `--format json`.
+`--keep-long-functions` (no splitting), `--no-document` (do not add
+missing docstrings; adding them is the default), `--trust-with-blocks` (see below), `--line-length N`, `--skip-data` for folders, `--format json`.
 The same options work on `modularize`.
 
 Each refinement verifies itself and is skipped for a file whose result does
@@ -175,7 +175,7 @@ rest of the function must be unchanged. The module must compile and no new
 undefined names may appear. Each round is verified on its own; otherwise
 that round is not applied.
 
-## Documenting (`--document`)
+## Documenting (on by default; `--no-document` turns it off)
 
 Functions and methods without a docstring get one that states only what the
 code shows:

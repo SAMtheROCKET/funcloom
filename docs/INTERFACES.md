@@ -25,7 +25,8 @@ was handled unsafely) is a safety fix, not an interface change.
 
 Stable options keep their names and meaning, including `--output`,
 `--format`, `--config`, `--line-length`, `--cells`, `--entries`,
-`--skip-data`, `--package-name`, `--document`, `--keep-long-functions`,
+`--skip-data`, `--package-name`, `--document` (now the default;
+`--no-document` turns it off), `--keep-long-functions`,
 `--trust-with-blocks`, `--show-files` and `--fail-on`.
 
 ## Exit codes

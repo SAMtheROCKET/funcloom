@@ -52,16 +52,19 @@ def add_refine_options_none(parser: argparse.ArgumentParser) -> None:
     Args:
         parser (argparse.ArgumentParser): Command parser.
     Returns:
-        None: Adds --keep-long-functions, --document and
+        None: Adds --keep-long-functions, --document/--no-document and
             --trust-with-blocks.
     Warnings:
-        Splitting is on by default; documentation and trusting with
-        blocks are opt-in.
+        Splitting and documentation are on by default; trusting with
+        blocks is opt-in.
     """
     parser.add_argument("--keep-long-functions", action="store_true",
                         help="Do not split functions over 40 lines")
-    parser.add_argument("--document", action="store_true",
-                        help="Add docstrings to functions that have none")
+    parser.add_argument("--document", action=argparse.BooleanOptionalAction,
+                        default=True,
+                        help="Add docstrings that describe what the code "
+                             "shows to functions that have none (default; "
+                             "--no-document leaves them out)")
     parser.add_argument(
         "--trust-with-blocks", action="store_true",
         help="Treat values bound in with blocks as bound, unless the "

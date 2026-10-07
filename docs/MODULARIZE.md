@@ -96,7 +96,8 @@ directives stay as written and are listed in the notes.
 
 Generated modules, and in folder mode every copied Python file, are refined:
 functions over 40 lines are split into verified helpers, long lines are
-wrapped, and `--document` adds missing docstrings. Use
+wrapped, and missing docstrings are added (`--no-document` leaves them
+out). Use
 `--keep-long-functions` to turn splitting off, and `--trust-with-blocks`
 to let values bound in `with` blocks cross step boundaries (see
 [REFINE.md](REFINE.md)). Compilation and line

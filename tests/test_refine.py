@@ -276,7 +276,7 @@ class RefineCommandTests(unittest.TestCase):
         (project / "data.txt").write_text("keep")
         result = subprocess.run(
             [sys.executable, "-m", "funcloom", "refine", str(project),
-             "--output", str(self.root / "out")],
+             "--output", str(self.root / "out"), "--no-document"],
             capture_output=True, text=True, check=False)
         self.assertEqual(result.returncode, 0, result.stderr)
         out = self.root / "out"

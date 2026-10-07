@@ -150,7 +150,7 @@ python -m venv .venv
 | `plan` | An explicit module-level line selection | Extraction contract, draft function/caller, source hashes, effects and refusal reasons |
 | `plan ... --apply-to NEW.py` | The same selection (experimental) | A new file with the region replaced by the function and its call, checked before it is written; the original is never changed |
 | `modularize` | Script, stdin, notebook or project folder | New modules, step functions, a `Pipeline` class and entry scripts |
-| `refine` | Python file or project folder | New copies with supported long functions/blocks split, lines wrapped and optional docstring skeletons |
+| `refine` | Python file or project folder | New copies with supported long functions/blocks split, lines wrapped and docstrings that describe the code (`--no-document` to skip) |
 | `scan` / `check` | Python file or project folder | Inventory and configured line, size, annotation, documentation and naming findings |
 | `doctor` | Installed environment | Runtime version, interpreter, package location and capabilities |
 
@@ -172,7 +172,7 @@ python -m funcloom snippet examples/snippet_generic.py --naming mathematical
 python -m funcloom snippet examples/snippet_tax.ipynb --cell 2 --no-context
 python -m funcloom modularize examples/modular_sales_report.py --output demo_sales
 python demo_sales/main.py
-python -m funcloom refine examples/long_functions.py --output demo_refined.py --document
+python -m funcloom refine examples/long_functions.py --output demo_refined.py
 python demo_refined.py
 python -m funcloom check examples/clean_module.py --fail-on warning
 ```
