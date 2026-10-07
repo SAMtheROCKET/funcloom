@@ -54,6 +54,7 @@ class TopStatement:
     title: str = ""
     starts_section: bool = False
     names: StatementNames = field(default_factory=StatementNames)
+    blank_before: bool = False
 
 
 @dataclass

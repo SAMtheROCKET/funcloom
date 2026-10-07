@@ -1,5 +1,15 @@
 # Unreleased
 
+- `modularize`: a script with no comment headings is no longer one big
+  `run_step_1`. It is split at its blank-line paragraphs (paragraphs
+  under four lines join the next one) and every split is still checked
+  and merged back when it would change behavior. Steps without a heading
+  are named after their result or, failing that, their first known
+  operations (`save_csv_and_plot`, `print_results`) instead of
+  `run_step_N`. Sweep: 3,205 standard-library and package files (584 +
+  2,621), no
+  crash or timeout.
+
 - Generated docstrings (`refine --document`, and RefacTrail's `fix`) now
   describe what the code shows instead of placeholders: the summary adds
   up to three visible operations ("It opens path, reads CSV rows and

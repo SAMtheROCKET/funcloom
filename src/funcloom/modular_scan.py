@@ -93,6 +93,7 @@ def make_top_statement(
     return TopStatement(
         node, first_int, node.end_lineno, node.col_offset, title=title_str,
         starts_section=bool(title_str) or blank_int >= 2,
+        blank_before=blank_int >= 1,
     )
 
 

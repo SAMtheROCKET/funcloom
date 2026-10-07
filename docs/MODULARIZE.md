@@ -161,6 +161,12 @@ avoid a circular import. Run the result from the output folder with
   at about 28 lines. The comment or Markdown heading becomes the function
   name and docstring (`# Load the records` â†’ `load_records`). The body of
   `if __name__ == "__main__":` becomes the `run_main_block` step.
+  A script with no such headings at all is split at its blank-line
+  paragraphs instead; a paragraph of fewer than four lines joins the next
+  one. Steps without a heading are named after what they produce
+  (`compute_totals`) or, when they produce nothing later code reads,
+  after their first known operations (`save_csv_and_plot`,
+  `print_results`).
 - Each step's parameters are the values earlier steps produced that it
   reads; it returns only values that later steps read. The `Pipeline`
   stores them as attributes, so results can be inspected after `run()`.

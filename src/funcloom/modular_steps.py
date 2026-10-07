@@ -13,6 +13,9 @@ from funcloom.modular_models import (
 )
 
 STEP_BODY_TARGET_INT = 28
+# In a script without headings, a paragraph shorter than this joins the
+# next one instead of becoming a step of its own.
+MIN_PARAGRAPH_LINES_INT = 4
 # Names each analysed statement may unbind. Statement nodes are never
 # changed in place (rewrites work on copies), so the result per node
 # stays valid; entries go when their node does.
@@ -25,6 +28,17 @@ SUPPRESSING_NAMES_TUPLE = (
 )
 STOPWORDS_TUPLE = ("the", "a", "an", "of", "and", "to", "for", "in", "on",
                    "with", "step", "cell")
+# Name parts for steps without a title or outputs, by called name.
+CALL_VERBS_DICT = {
+    "makedirs": "create_folders", "mkdir": "create_folders",
+    "read_csv": "load_csv", "read_excel": "load_excel",
+    "read_parquet": "load_parquet", "to_csv": "save_csv",
+    "to_excel": "save_excel", "to_parquet": "save_parquet",
+    "to_json": "save_json", "plot": "plot", "savefig": "save_figure",
+    "show": "show_figure", "dump": "save_data", "execute": "run_sql",
+    "commit": "commit_changes", "print": "print_results",
+    "write": "write_file", "post": "send_request", "get": "",
+}
 
 
 @contextmanager
@@ -254,6 +268,9 @@ def build_initial_steps_list(
     """
     steps_list: list[StepPlan] = []
     previous_origin_str = None
+    # Scripts with no headings at all are split at blank-line paragraphs.
+    paragraphs_bool = not source_info.segments and not any(
+        top_info.starts_section for top_info in executable_list[1:])
     for top_info in executable_list:
         segment_info = next(
             (
@@ -264,15 +281,56 @@ def build_initial_steps_list(
         if segment_info is not None:
             new_bool = origin_str != previous_origin_str
         else:
-            new_bool = not steps_list or top_info.starts_section
+            new_bool = not steps_list or top_info.starts_section or (
+                paragraphs_bool and top_info.blank_before)
         if new_bool:
             title_str = top_info.title or (
                 segment_info.title if segment_info else "")
             steps_list.append(StepPlan("", title_str, origin_str))
         previous_origin_str = origin_str
         steps_list[-1].statements.append(top_info)
+    if paragraphs_bool:
+        steps_list = join_short_paragraphs_list(steps_list)
     return [piece for step_info in steps_list
             for piece in split_step_list(step_info)]
+
+
+def join_short_paragraphs_list(steps_list: list[StepPlan]) -> list[StepPlan]:
+    """Join paragraphs shorter than MIN_PARAGRAPH_LINES_INT to the next.
+
+    Args:
+        steps_list (list[StepPlan]): One step per blank-line paragraph.
+    Returns:
+        list[StepPlan]: Steps of at least that many lines, except
+            possibly the last, which joins the one before when short.
+    Warnings:
+        Line counts include comments inside statements.
+    """
+    joined_list: list[StepPlan] = []
+    for step_info in steps_list:
+        if joined_list and count_step_lines_int(joined_list[-1]) < (
+                MIN_PARAGRAPH_LINES_INT):
+            joined_list[-1].statements.extend(step_info.statements)
+        else:
+            joined_list.append(step_info)
+    if len(joined_list) > 1 and count_step_lines_int(joined_list[-1]) < (
+            MIN_PARAGRAPH_LINES_INT):
+        joined_list[-2].statements.extend(joined_list.pop().statements)
+    return joined_list
+
+
+def count_step_lines_int(step_info: StepPlan) -> int:
+    """The source lines a step's statements span.
+
+    Args:
+        step_info (StepPlan): A step.
+    Returns:
+        int: Sum of each statement's line count.
+    Warnings:
+        Blank lines between statements are not counted.
+    """
+    return sum(top_info.last_line - top_info.first_line + 1
+               for top_info in step_info.statements)
 
 
 def split_step_list(step_info: StepPlan) -> list[StepPlan]:
@@ -529,6 +587,7 @@ def step_name_str(
     base_str = "_".join(words_list[:5])
     if not base_str and step_info.outputs:
         base_str = "compute_" + step_info.outputs[-1].lower().strip("_")
+    base_str = base_str or describe_step_calls_str(step_info)
     if not base_str or not base_str.isidentifier():
         base_str = ("step_" + base_str if base_str and base_str[0].isdigit()
                     else f"run_step_{index_int}")
@@ -538,6 +597,32 @@ def step_name_str(
         counter_int += 1
     taken_set.add(candidate_str)
     return candidate_str
+
+
+def describe_step_calls_str(step_info: StepPlan) -> str:
+    """A name from the first two known operations a step performs.
+
+    Args:
+        step_info (StepPlan): A step without a title or outputs.
+    Returns:
+        str: Such as "save_csv_and_plot", or "" when no known call.
+    Warnings:
+        Calls are recognised by their last name part only.
+    """
+    verbs_list: list[str] = []
+    for top_info in step_info.statements:
+        calls_list = sorted(
+            (node for node in ast.walk(top_info.node)
+             if isinstance(node, ast.Call)),
+            key=lambda node: (node.lineno, node.col_offset))
+        for call_node in calls_list:
+            called_str = (call_node.func.attr if isinstance(
+                call_node.func, ast.Attribute)
+                else getattr(call_node.func, "id", ""))
+            verb_str = CALL_VERBS_DICT.get(called_str, "")
+            if verb_str and verb_str not in verbs_list:
+                verbs_list.append(verb_str)
+    return "_and_".join(verbs_list[:2])
 
 
 def step_record(step_info: StepPlan) -> StepRecord:
